@@ -1,1 +1,1 @@
-var a=0;
+!function(){var o={returnOption:function(n){var t={ltr:!0};return t.direct=t.ltr?1:-1,t=Object.assign(t,n)}};console.log("ds");this.uiSlide=function(n,t){o.returnOption(t)},console.log("dsaaa")}();

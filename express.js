@@ -1,4 +1,5 @@
 var express = require('express');
+var minify = require('./_minify');
 var pugbuild = require('./_pugbuild');
 
 var app = express();
@@ -10,5 +11,6 @@ app.get('/', function (req, res) {
 });
 
 app.listen(3000, function () {
+    minify = require('./_minify');
     console.log('Example app listening on port 3000!');
 });
