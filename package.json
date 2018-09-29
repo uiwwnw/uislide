@@ -1,0 +1,28 @@
+{
+  "name": "uislide",
+  "version": "1.0.0",
+  "description": "slide",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build",
+    "start": "node express"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uiwwnw/uislide.git"
+  },
+  "keywords": [
+    "slide"
+  ],
+  "author": "uiwwnw (uiwwnw@icloud.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uiwwnw/uislide/issues"
+  },
+  "homepage": "https://github.com/uiwwnw/uislide#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "node-minify": "^3.5.0",
+    "pug": "^2.0.3"
+  }
+}

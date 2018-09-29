@@ -1,0 +1,12 @@
+doctype html
+html(lang='ko')
+  head
+    title= pageTitle
+    script(src='dist/uiSlide.js')
+  body
+    h1 uiSlide demo page
+    h2 normal
+    .slide
+        ul
+            -for(var i = 1; i <= 10; i++)
+             li= 'item'+i
