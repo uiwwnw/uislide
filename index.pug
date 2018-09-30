@@ -5,6 +5,7 @@ html(lang='ko')
     script(src='src/test.js')
     style.
         img {
+            display: block;
             width: 100%;
         }
 
@@ -21,15 +22,21 @@ html(lang='ko')
             height: 300px;
         }
 
+        .slideNormal.fixed li {
+            position: static;
+        }
+
         .slideNormal ul {
             height: 100%;
+            margin: 0;
         }
 
         .slideNormal li {
+            position: relative;
             height: 100%;
         }
 
-        .slideNormal .fixedInfo {
+        .slideNormal span {
             position: absolute;
             top: 50%;
             left: 10px;
@@ -41,31 +48,18 @@ html(lang='ko')
             border: 5px double #333;
             background: #fff;
         }
-
-        .slideNormal .normalInfo {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            margin: 84px 0 0 -120px;
-            line-height: 100px;
-            text-align: center;
-            border: 5px double #333;
-            background: #fff;
-        }
   body
     h1 uiSlide demo page
     h2 normal
     .slideNormal
         ul
             -for(var i = 1; i <= 10; i++)
-             li
-                img(src='data/img/sampleimg' + [i] + '.jpg')
-                -if(i < 4)
-                 span.fixedInfo= '이미지정보' + i 
-                -else
-                 span.normalInfo= '이미지정보' + i 
+                li
+                    img(src='data/img/sampleimg' + [i] + '.jpg')
+                    span= '이미지정보' + i 
     script.
         var a = new uiSlide('.slideNormal', {
+            zIndex: true,
             width: '100%',
-            zIndex: true
+            fixed: [3, 4, 5]
         });

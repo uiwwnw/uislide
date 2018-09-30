@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="ko"><head><title>uislide demo</title><script src="src/test.js"></script><style>img {
+    display: block;
+    width: 100%;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+.slideNormal {
+    position: relative;
+    height: 300px;
+}
+
+.slideNormal.fixed li {
+    position: static;
+}
+
+.slideNormal ul {
+    height: 100%;
+    margin: 0;
+}
+
+.slideNormal li {
+    position: relative;
+    height: 100%;
+}
+
+.slideNormal span {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    line-height: 100px;
+    text-align: center;
+    border: 5px double #333;
+    background: #fff;
+}</style></head><body><h1>uiSlide demo page</h1><h2>normal</h2><div class="slideNormal"><ul><li><img src="data/img/sampleimg1.jpg"><span>이미지정보1</span></li><li><img src="data/img/sampleimg2.jpg"><span>이미지정보2</span></li><li><img src="data/img/sampleimg3.jpg"><span>이미지정보3</span></li><li><img src="data/img/sampleimg4.jpg"><span>이미지정보4</span></li><li><img src="data/img/sampleimg5.jpg"><span>이미지정보5</span></li><li><img src="data/img/sampleimg6.jpg"><span>이미지정보6</span></li><li><img src="data/img/sampleimg7.jpg"><span>이미지정보7</span></li><li><img src="data/img/sampleimg8.jpg"><span>이미지정보8</span></li><li><img src="data/img/sampleimg9.jpg"><span>이미지정보9</span></li><li><img src="data/img/sampleimg10.jpg"><span>이미지정보10</span></li></ul></div><script>var a = new uiSlide('.slideNormal', {
+    zIndex: true,
+    width: '100%',
+    fixed: [3, 4, 5]
+});</script></body></html>

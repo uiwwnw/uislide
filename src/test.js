@@ -39,7 +39,10 @@
             var option = {};
             option.ltr = true;
             option.startIndex = 0;
+            option.auto = true;
+            option.autoTime = 2000;
             option.zIndex = false;
+            option.fixed = false;
             option.button = true;
             option.direct = option.ltr?1:-1;
             option.animation = 'margin-left';
@@ -57,6 +60,7 @@
     var uiSlide = function(e, opt) {
         var elem = document.querySelector(e);
         var length = elem.length;
+        
         if(length === 0) {
             return false;
         };
@@ -71,6 +75,7 @@
             }, option.animationTime);
         };
         var init = (function() {
+            ctr.siv;
             ctr.sto;
             ctr.ing = false;
             ctr.slide = elem;
@@ -81,6 +86,7 @@
             utils.style(ctr.slide, {'overflow': 'hidden'});
             utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition': option.animation + ' 0s ease'});
             utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
+            // utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
         }());
         var move = function(i) {
             if (!ctr.ing) {
@@ -93,8 +99,22 @@
                 var _width = ctr.item[idx].offsetWidth;
                 utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'});
                 utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
+                // if(_currentIdx !== _exIdx) {
+                //     utils.style(ctr.item[_exIdx], {'z-index': '0'});
+                //     utils.style(ctr.item[_exIdx], {'z-index': '1'}, option.animationTime);
+                // };
                 utils.style(ctr.item[_exIdx], {'z-index': '1'});
                 utils.style(ctr.item[_currentIdx], {'z-index': '2'});
+                ctr.slide.classList.remove('fixed');
+                // utils.style(ctr.item[_currentIdx], {'z-index': '2', 'position': 'relative'});
+                if (option.fixed !== false) {
+                    for(var i = 0; i < option.fixed.length; i++) {
+                        if (_currentIdx === option.fixed[i]) {
+                            ctr.slide.classList.add('fixed');
+                            // utils.style(ctr.item[_currentIdx], {'position': 'static'});
+                        }
+                    };
+                };
                 idx = _currentIdx;
                 ing();
                 return 'work done'
@@ -102,9 +122,25 @@
                 return 'work false';
             }
         };
+        var autoStop = function() {
+            if(option.auto) {
+                clearInterval(ctr.siv);
+            }
+        };
+        var autoStart = function() {
+            if(option.auto) {
+                autoStop();
+                ctr.siv = setInterval(function() {
+                    move();
+                }, option.autoTime);
+            }
+        };
         move(option.startIndex);
+        autoStart();
         return {
-            move: move
+            move: move,
+            autoStart: autoStart,
+            autoStop: autoStop
         }
     };
     root.uiSlide = uiSlide;
