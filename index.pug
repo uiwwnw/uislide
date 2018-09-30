@@ -20,12 +20,17 @@ html(lang='ko')
         }
 
         .slideNormal {
-            position: relative;
             height: 300px;
         }
 
         .slideNormal.fixed li {
             position: static;
+        }
+
+        .slideNormal.fixed span {
+            color: #fff;
+            border-color: #fff;
+            background: #333;
         }
 
         .slideNormal ul {
@@ -41,27 +46,72 @@ html(lang='ko')
         .slideNormal span {
             position: absolute;
             top: 50%;
-            left: 10px;
+            left: 50px;
             width: 100px;
             height: 100px;
             margin-top: -50px;
             line-height: 100px;
             text-align: center;
             border: 5px double #333;
+            transition: 1s;
             background: #fff;
         }
+
+        .slideNormal button {
+            z-index: 3;
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            margin-top: -15px;
+            font-size: 20px;
+            color: #333;
+            border: none;
+            text-indent: -9999px;
+            background: rgba(255, 255, 255, .3);
+        }
+
+        .slideNormal button:before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -13px -4px;
+            text-indent: 0;
+            content: "";
+        }
+
+        .slideNormal .leftBtn {
+            left: 0;
+        }
+
+        .slideNormal .leftBtn:before {
+            content: "<";
+        }
+
+        .slideNormal .rightBtn {
+            right: 0;
+        }
+
+        .slideNormal .rightBtn:before {
+            content: ">";
+        }
+
   body
     h1 uiSlide demo page
     h2 normal
     .slideNormal
         ul
-            -for(var i = 1; i <= 10; i++)
+            -for(var i = 0; i < 10; i++)
                 li
-                    img(src='data/img/sampleimg' + [i] + '.jpg')
-                    span= '이미지정보' + i 
+                    img(src='data/img/sampleimg' + [i+1] + '.jpg')
+                    -if(i > 2 && i < 6) 
+                     span= 'fixed info' + i 
+                    -else
+                     span= 'unfixed info' + i 
+
     script.
         var a = new uiSlide('.slideNormal', {
-            zIndex: true,
             width: '100%',
-            fixed: [3, 4, 5]
+            fixed: [3, 4, 5],
+            loop: true
         });

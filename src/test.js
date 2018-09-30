@@ -39,11 +39,22 @@
             var option = {};
             option.ltr = true;
             option.startIndex = 0;
+
+            option.loop = false;
+
             option.auto = true;
             option.autoTime = 2000;
-            option.zIndex = false;
+
+            option.zIndex = true;
+            option.currentClassName = 'current';
+            option.fixedClassName = 'fixed';
+
             option.fixed = false;
+
             option.button = true;
+            option.buttonLeftClassName = 'leftBtn';
+            option.buttonRightClassName = 'rightBtn';
+
             option.direct = option.ltr?1:-1;
             option.animation = 'margin-left';
             option.animationTime = 700;
@@ -83,7 +94,7 @@
             ctr.wrap = ctr.slide.childNodes[0];
             ctr.item = ctr.wrap.childNodes;
             ctr.itemLength = ctr.item.length;
-            utils.style(ctr.slide, {'overflow': 'hidden'});
+            utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'});
             utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition': option.animation + ' 0s ease'});
             utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
             // utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
@@ -105,13 +116,14 @@
                 // };
                 utils.style(ctr.item[_exIdx], {'z-index': '1'});
                 utils.style(ctr.item[_currentIdx], {'z-index': '2'});
-                ctr.slide.classList.remove('fixed');
+                ctr.item[_exIdx].classList.remove(option.currentClassName);
+                ctr.item[_currentIdx].classList.add(option.currentClassName);
                 // utils.style(ctr.item[_currentIdx], {'z-index': '2', 'position': 'relative'});
                 if (option.fixed !== false) {
-                    for(var i = 0; i < option.fixed.length; i++) {
+                    ctr.slide.classList.remove(option.fixedClassName);
+                    for(var i in option.fixed) {
                         if (_currentIdx === option.fixed[i]) {
-                            ctr.slide.classList.add('fixed');
-                            // utils.style(ctr.item[_currentIdx], {'position': 'static'});
+                            ctr.slide.classList.add(option.fixedClassName);
                         }
                     };
                 };
@@ -120,12 +132,42 @@
                 return 'work done'
             } else {
                 return 'work false';
-            }
+            };
         };
+        var button = function() {
+            if(option.button) {
+                if(ctr.buttonLeft === undefined) {
+                    ctr.buttonLeft = document.createElement('button');
+                    ctr.buttonRight = document.createElement('button');
+                    ctr.buttonLeft.classList.add(option.buttonLeftClassName);
+                    ctr.buttonRight.classList.add(option.buttonRightClassName);
+                    ctr.buttonLeft.innerText = '이전 슬라이드 보기';
+                    ctr.buttonRight.innerText = '이후 슬라이드 보기';
+                    ctr.buttonLeft.onclick = function() {
+                        autoStop();
+                        move(false);
+                        clearTimeout(ctr.btnSto);
+                        ctr.btnSto = setTimeout(function() {
+                            autoStart();
+                        }, option.autoTime);
+                    };
+                    ctr.buttonRight.onclick = function() {
+                        autoStop();
+                        move();
+                        clearTimeout(ctr.btnSto);
+                        ctr.btnSto = setTimeout(function() {
+                            autoStart();
+                        }, option.autoTime);
+                    };
+                    ctr.slide.append(ctr.buttonLeft);
+                    ctr.slide.append(ctr.buttonRight);
+                }
+            }
+        }();
         var autoStop = function() {
             if(option.auto) {
                 clearInterval(ctr.siv);
-            }
+            };
         };
         var autoStart = function() {
             if(option.auto) {
@@ -133,7 +175,7 @@
                 ctr.siv = setInterval(function() {
                     move();
                 }, option.autoTime);
-            }
+            };
         };
         move(option.startIndex);
         autoStart();
