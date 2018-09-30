@@ -2,7 +2,8 @@ doctype html
 html(lang='ko')
   head
     title= pageTitle
-    script(src='src/test.js')
+    //- script(src='src/test.js')
+    script(src='dist/uiSlide.js')
     style.
         img {
             display: block;
@@ -41,6 +42,11 @@ html(lang='ko')
         .slideNormal li {
             position: relative;
             height: 100%;
+        }
+
+        .slideNormal.width3loopfixed li {
+            padding: 0 5%;
+            box-sizing: border-box;
         }
 
         .slideNormal span {
@@ -98,8 +104,8 @@ html(lang='ko')
 
   body
     h1 uiSlide demo page
-    h2 normal
-    .slideNormal
+    h2 normal & loop & fixed
+    .slideNormal.loopfixed
         ul
             -for(var i = 0; i < 10; i++)
                 li
@@ -110,8 +116,40 @@ html(lang='ko')
                      span= 'unfixed info' + i 
 
     script.
-        var a = new uiSlide('.slideNormal', {
+        var a = new uiSlide('.loopfixed', {
             width: '100%',
-            fixed: [3, 4, 5],
+            fixed: [1, 2, 4, 5],
             loop: true
+        });
+    h2 normal & unloop & unfixed
+    .slideNormal.unloopunfixed
+        ul
+            -for(var i = 0; i < 10; i++)
+                li
+                    img(src='data/img/sampleimg' + [i+1] + '.jpg')
+                    -if(i > 2 && i < 6) 
+                     span= 'fixed info' + i 
+                    -else
+                     span= 'unfixed info' + i 
+
+    script.
+        var a = new uiSlide('.unloopunfixed', {
+            width: '100%'
+        });
+    h2 width: 1/3 && loop & fixed
+    .slideNormal.width3loopfixed
+        ul
+            -for(var i = 0; i < 10; i++)
+                li
+                    img(src='data/img/sampleimg' + [i+1] + '.jpg')
+                    -if(i > 2 && i < 6) 
+                     span= 'fixed info' + i 
+                    -else
+                     span= 'unfixed info' + i 
+
+    script.
+        var a = new uiSlide('.width3loopfixed', {
+            width: 'calc(100% / 3)',
+            loop: true,
+            fixed: [5, 8]
         });

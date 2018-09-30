@@ -28,12 +28,21 @@
                     styleTxt +=  i + ': ' + value[i] + ';';
                 };
             };
-            el.setAttribute('style', styleTxt);
-            if (time !== undefined) {
+            if (time === undefined) {
+                el.setAttribute('style', styleTxt);
+            };
+            if (time > 0) {
+                el.setAttribute('style', styleTxt);
                 setTimeout(function() {
                     el.setAttribute('style', exProp);
                 }, time);
             }
+            if (time < 0) {
+                setTimeout(function() {
+                    console.log(time);
+                    el.setAttribute('style', styleTxt);
+                }, -time);
+            };
         };
         var returnOption = function(opt) {
             var option = {};
@@ -92,11 +101,29 @@
             ctr.slide = elem;
             ctr.slideWidth = ctr.slide.offsetWidth;
             ctr.wrap = ctr.slide.childNodes[0];
-            ctr.item = ctr.wrap.childNodes;
+            // ctr.item = ctr.wrap.childNodes;
+            ctr.item = Array.prototype.slice.call(ctr.wrap.childNodes);
             ctr.itemLength = ctr.item.length;
             utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'});
             utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition': option.animation + ' 0s ease'});
             utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
+            if(option.loop) {
+                ctr.cloneLength = Math.ceil(ctr.slideWidth / ctr.item[0].offsetWidth);
+                ctr.afterClone = [];
+                ctr.beforeClone = [];
+                for(var i = 0; i < ctr.cloneLength; i++) {
+                    var _a = ctr.item[i].cloneNode(true);
+                    var _b = ctr.item[ctr.itemLength - ctr.cloneLength + i].cloneNode(true);
+                    utils.style(_b, {'margin-left': -ctr.item[ctr.itemLength - 1].offsetWidth+'px'});
+                    // utils.style(_b, {'position': 'absolute'});
+                    _a.classList.add('clone');
+                    _b.classList.add('clone');
+                    ctr.wrap.append(_a);
+                    ctr.wrap.prepend(_b);
+                    ctr.afterClone.push(_a);
+                    ctr.beforeClone.push(_b);
+                };
+            };
             // utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
         }());
         var move = function(i) {
@@ -105,11 +132,18 @@
                 i = i === false?idx-option.direct:i;
                 i = i === true?idx+option.direct:i;
                 var _currentIdx = i === undefined?idx+option.direct:i;
+                var _cloneCurrentIdx = _currentIdx;
                 _currentIdx = (_currentIdx > ctr.itemLength - 1)?0:_currentIdx;
                 _currentIdx = (_currentIdx < 0)?ctr.itemLength - 1:_currentIdx;
                 var _width = ctr.item[idx].offsetWidth;
-                utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'});
-                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
+                if(option.loop && (_cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1 || _cloneCurrentIdx < 0)) {
+                    utils.style(ctr.wrap, {'margin-left': -_width * _cloneCurrentIdx + 'px'});
+                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -option.animationTime - 1);
+                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
+                } else {
+                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'});
+                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
+                }
                 // if(_currentIdx !== _exIdx) {
                 //     utils.style(ctr.item[_exIdx], {'z-index': '0'});
                 //     utils.style(ctr.item[_exIdx], {'z-index': '1'}, option.animationTime);
