@@ -1,3 +1,7 @@
+var fs = require('fs');
+fs.unlink('./index.html', function (error) {
+    console.log('remove index.html');
+});
 var express = require('express');
 var minify = require('./_minify');
 var pugbuild = require('./_pugbuild');
