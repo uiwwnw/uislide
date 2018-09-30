@@ -3,12 +3,69 @@ html(lang='ko')
   head
     title= pageTitle
     script(src='src/test.js')
+    style.
+        img {
+            width: 100%;
+        }
+
+        ul {
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .slideNormal {
+            position: relative;
+            height: 300px;
+        }
+
+        .slideNormal ul {
+            height: 100%;
+        }
+
+        .slideNormal li {
+            height: 100%;
+        }
+
+        .slideNormal .fixedInfo {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            width: 100px;
+            height: 100px;
+            margin-top: -50px;
+            line-height: 100px;
+            text-align: center;
+            border: 5px double #333;
+            background: #fff;
+        }
+
+        .slideNormal .normalInfo {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            margin: 84px 0 0 -120px;
+            line-height: 100px;
+            text-align: center;
+            border: 5px double #333;
+            background: #fff;
+        }
   body
     h1 uiSlide demo page
     h2 normal
-    .slide
-        ul(style='display: block; margin: auto;')
+    .slideNormal
+        ul
             -for(var i = 1; i <= 10; i++)
-             li= 'iteaam'+i
+             li
+                img(src='data/img/sampleimg' + [i] + '.jpg')
+                -if(i < 4)
+                 span.fixedInfo= '이미지정보' + i 
+                -else
+                 span.normalInfo= '이미지정보' + i 
     script.
-        var a = new uiSlide('.slide');
+        var a = new uiSlide('.slideNormal', {
+            width: '100%',
+            zIndex: true
+        });
