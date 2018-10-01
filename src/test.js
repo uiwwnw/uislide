@@ -58,7 +58,7 @@
             option.fixedClassName = 'fixed';
 
             option.fixed = false;
-            option.center = true;
+            option.center = false;
 
             option.button = true;
             option.buttonLeftClassName = 'leftBtn';
