@@ -39,7 +39,6 @@
             }
             if (time < 0) {
                 setTimeout(function() {
-                    console.log(time);
                     el.setAttribute('style', styleTxt);
                 }, -time);
             };
@@ -63,6 +62,9 @@
             option.button = true;
             option.buttonLeftClassName = 'leftBtn';
             option.buttonRightClassName = 'rightBtn';
+
+            option.indicator = true;
+            option.indicatorClassName = 'indicator';
 
             option.direct = option.ltr?1:-1;
             option.animation = 'margin-left';
@@ -139,11 +141,14 @@
                 if(option.loop && (_cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1 || _cloneCurrentIdx < 0)) {
                     utils.style(ctr.wrap, {'margin-left': -_width * _cloneCurrentIdx + 'px'});
                     utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -option.animationTime - 1);
-                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
                 } else {
                     utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'});
-                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
-                }
+                };
+                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
+                if(option.indicator) {
+                    ctr.indicators[_exIdx].classList.remove(option.currentClassName);
+                    ctr.indicators[_currentIdx].classList.add(option.currentClassName);
+                };
                 // if(_currentIdx !== _exIdx) {
                 //     utils.style(ctr.item[_exIdx], {'z-index': '0'});
                 //     utils.style(ctr.item[_exIdx], {'z-index': '1'}, option.animationTime);
@@ -168,34 +173,53 @@
                 return 'work false';
             };
         };
+        var indicator = function() {
+            if(option.indicator) {
+                ctr.indicator = document.createElement('span');
+                ctr.indicators = ctr.indicator.childNodes;
+                ctr.slide.append(ctr.indicator);
+                ctr.indicator.classList.add(option.indicatorClassName);
+                for(var i = 0; i < ctr.itemLength; i++) {
+                    var _idc = document.createElement('i');
+                    ctr.indicator.append(_idc);
+                    _idc.setAttribute('data-index', i);
+                    _idc.onclick = function() {
+                        autoStop();
+                        move(Number(this.getAttribute('data-index')));
+                        clearTimeout(ctr.btnSto);
+                        ctr.btnSto = setTimeout(function() {
+                            autoStart();
+                        }, option.autoTime);
+                    };
+                }
+            }
+        }();
         var button = function() {
             if(option.button) {
-                if(ctr.buttonLeft === undefined) {
-                    ctr.buttonLeft = document.createElement('button');
-                    ctr.buttonRight = document.createElement('button');
-                    ctr.buttonLeft.classList.add(option.buttonLeftClassName);
-                    ctr.buttonRight.classList.add(option.buttonRightClassName);
-                    ctr.buttonLeft.innerText = '이전 슬라이드 보기';
-                    ctr.buttonRight.innerText = '이후 슬라이드 보기';
-                    ctr.buttonLeft.onclick = function() {
-                        autoStop();
-                        move(false);
-                        clearTimeout(ctr.btnSto);
-                        ctr.btnSto = setTimeout(function() {
-                            autoStart();
-                        }, option.autoTime);
-                    };
-                    ctr.buttonRight.onclick = function() {
-                        autoStop();
-                        move();
-                        clearTimeout(ctr.btnSto);
-                        ctr.btnSto = setTimeout(function() {
-                            autoStart();
-                        }, option.autoTime);
-                    };
-                    ctr.slide.append(ctr.buttonLeft);
-                    ctr.slide.append(ctr.buttonRight);
-                }
+                ctr.buttonLeft = document.createElement('button');
+                ctr.buttonRight = document.createElement('button');
+                ctr.buttonLeft.classList.add(option.buttonLeftClassName);
+                ctr.buttonRight.classList.add(option.buttonRightClassName);
+                ctr.buttonLeft.innerText = '이전 슬라이드 보기';
+                ctr.buttonRight.innerText = '이후 슬라이드 보기';
+                ctr.buttonLeft.onclick = function() {
+                    autoStop();
+                    move(false);
+                    clearTimeout(ctr.btnSto);
+                    ctr.btnSto = setTimeout(function() {
+                        autoStart();
+                    }, option.autoTime);
+                };
+                ctr.buttonRight.onclick = function() {
+                    autoStop();
+                    move();
+                    clearTimeout(ctr.btnSto);
+                    ctr.btnSto = setTimeout(function() {
+                        autoStart();
+                    }, option.autoTime);
+                };
+                ctr.slide.append(ctr.buttonLeft);
+                ctr.slide.append(ctr.buttonRight);
             }
         }();
         var autoStop = function() {

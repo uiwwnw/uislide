@@ -28,7 +28,7 @@ html(lang='ko')
             position: static;
         }
 
-        .slideNormal.fixed span {
+        .slideNormal.fixed li span {
             color: #fff;
             border-color: #fff;
             background: #333;
@@ -49,7 +49,7 @@ html(lang='ko')
             box-sizing: border-box;
         }
 
-        .slideNormal span {
+        .slideNormal li span {
             position: absolute;
             top: 50%;
             left: 50px;
@@ -102,9 +102,31 @@ html(lang='ko')
             content: ">";
         }
 
+        .slideNormal .indicator {
+            z-index: 3;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+        }
+
+        .slideNormal .indicator i {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: 2px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+        }
+
+        .slideNormal .indicator .current {
+            background: #fff;
+        }
+
   body
     h1 uiSlide demo page
-    h2 normal & loop & fixed
+    h2 normal & loop & fixed & indicator
     .slideNormal.loopfixed
         ul
             -for(var i = 0; i < 10; i++)
@@ -121,7 +143,7 @@ html(lang='ko')
             fixed: [1, 2, 4, 5],
             loop: true
         });
-    h2 normal & unloop & unfixed
+    h2 normal & unloop & unfixed & non indicator & no button
     .slideNormal.unloopunfixed
         ul
             -for(var i = 0; i < 10; i++)
@@ -134,7 +156,9 @@ html(lang='ko')
 
     script.
         var a = new uiSlide('.unloopunfixed', {
-            width: '100%'
+            width: '100%',
+            indicator: false,
+            button: false
         });
     h2 width: 1/3 && loop & fixed
     .slideNormal.width3loopfixed
