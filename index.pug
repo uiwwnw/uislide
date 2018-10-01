@@ -2,8 +2,8 @@ doctype html
 html(lang='ko')
   head
     title= pageTitle
-    //- script(src='src/test.js')
-    script(src='dist/uiSlide.js')
+    script(src='src/test.js')
+    //- script(src='dist/uiSlide.js')
     style.
         img {
             display: block;
@@ -47,6 +47,11 @@ html(lang='ko')
         .slideNormal.width3loopfixed li {
             padding: 0 5%;
             box-sizing: border-box;
+        }
+
+        .slideNormal.width3loopfixed li span {
+            left: 50%;
+            margin-left: -50px;
         }
 
         .slideNormal li span {
@@ -181,4 +186,5 @@ html(lang='ko')
             loop: true,
             autoTime: 3000,
             fixed: [5, 8]
+            //- auto: false
         });

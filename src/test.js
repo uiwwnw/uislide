@@ -58,6 +58,7 @@
             option.fixedClassName = 'fixed';
 
             option.fixed = false;
+            option.center = true;
 
             option.button = true;
             option.buttonLeftClassName = 'leftBtn';
@@ -110,13 +111,14 @@
             utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition': option.animation + ' 0s ease'});
             utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
             if(option.loop) {
-                ctr.cloneLength = Math.ceil(ctr.slideWidth / ctr.item[0].offsetWidth);
+                ctr.cloneLength = Math.floor(ctr.slideWidth / ctr.item[0].offsetWidth);
                 ctr.afterClone = [];
                 ctr.beforeClone = [];
                 for(var i = 0; i < ctr.cloneLength; i++) {
                     var _a = ctr.item[i].cloneNode(true);
-                    var _b = ctr.item[ctr.itemLength - ctr.cloneLength + i].cloneNode(true);
+                    var _b = ctr.item[ctr.itemLength - 1 - i].cloneNode(true);
                     utils.style(_b, {'margin-left': -ctr.item[ctr.itemLength - 1].offsetWidth+'px'});
+                    (option.center && (Math.floor(ctr.cloneLength / 2) === i)) && (utils.style(_b, {'margin-left': 0}));
                     // utils.style(_b, {'position': 'absolute'});
                     _a.classList.add('clone');
                     _b.classList.add('clone');
