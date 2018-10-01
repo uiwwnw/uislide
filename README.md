@@ -1,10 +1,10 @@
 ## demo
 
+[jsbin's demo](https://output.jsbin.com/fanusut)
+
 ## 설명
 
 uiSlide
-
-
 
 ## How to use
 
