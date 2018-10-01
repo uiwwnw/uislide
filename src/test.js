@@ -240,7 +240,8 @@
         return {
             move: move,
             autoStart: autoStart,
-            autoStop: autoStop
+            autoStop: autoStop,
+            index: function(){return idx}
         }
     };
     root.uiSlide = uiSlide;

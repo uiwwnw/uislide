@@ -140,6 +140,7 @@ html(lang='ko')
     script.
         var a = new uiSlide('.loopfixed', {
             width: '100%',
+            autoTime: 2600,
             fixed: [1, 2, 4, 5],
             loop: true
         });
@@ -155,7 +156,7 @@ html(lang='ko')
                      span= 'unfixed info' + i 
 
     script.
-        var a = new uiSlide('.unloopunfixed', {
+        var b = new uiSlide('.unloopunfixed', {
             width: '100%',
             indicator: false,
             button: false
@@ -172,8 +173,9 @@ html(lang='ko')
                      span= 'unfixed info' + i 
 
     script.
-        var a = new uiSlide('.width3loopfixed', {
+        var c = new uiSlide('.width3loopfixed', {
             width: 'calc(100% / 3)',
             loop: true,
+            autoTime: 3000,
             fixed: [5, 8]
         });
