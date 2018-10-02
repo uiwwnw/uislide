@@ -51,7 +51,7 @@
             option.loop = false;
 
             option.auto = true;
-            option.autoTime = 2000;
+            option.autoTime = 3000;
 
             option.zIndex = true;
             option.currentClassName = 'current';
@@ -69,7 +69,7 @@
 
             option.direct = option.ltr?1:-1;
             option.animation = 'margin-left';
-            option.animationTime = 700;
+            option.animationTime = 1300;
             option = Object.assign(option, opt);
             return option;
         }
@@ -103,9 +103,9 @@
             ctr.ing = false;
             ctr.slide = elem;
             ctr.slideWidth = ctr.slide.offsetWidth;
-            ctr.wrap = ctr.slide.childNodes[0];
+            ctr.wrap = ctr.slide.children[0];
             // ctr.item = ctr.wrap.childNodes;
-            ctr.item = Array.prototype.slice.call(ctr.wrap.childNodes);
+            ctr.item = Array.prototype.slice.call(ctr.wrap.children);
             ctr.itemLength = ctr.item.length;
             utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'});
             utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition': option.animation + ' 0s ease'});

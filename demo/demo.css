@@ -1,0 +1,131 @@
+img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+.slideNormal {
+    height: 300px;
+}
+
+.slideNormal.fixed li {
+    position: static;
+}
+
+.slideNormal.fixed li span {
+    display: none;
+    color: #fff;
+    border-color: #fff;
+    background: rgba(0, 0, 0, .7);
+}
+
+.slideNormal.fixed li.current span {
+    display: block;
+}
+
+.slideNormal ul {
+    height: 100%;
+    margin: 0;
+}
+
+.slideNormal li {
+    position: relative;
+    height: 100%;
+}
+
+.slideNormal.width3loopfixed li {
+    padding: 0 5%;
+    box-sizing: border-box;
+}
+
+.slideNormal.width3loopfixed li span {
+    left: 50%;
+    margin-left: -70px;
+}
+
+.slideNormal li span {
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    width: 140px;
+    height: 100px;
+    margin-top: -50px;
+    line-height: 100px;
+    text-align: center;
+    border: 5px double #333;
+    transition: 1s;
+    background: rgba(255, 255, 255, .7);
+}
+
+.slideNormal button {
+    z-index: 3;
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    font-size: 20px;
+    color: #333;
+    border: none;
+    text-indent: -9999px;
+    background: rgba(255, 255, 255, .3);
+}
+
+.slideNormal button:before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -13px -4px;
+    text-indent: 0;
+    content: "";
+}
+
+.slideNormal .leftBtn {
+    left: 0;
+}
+
+.slideNormal .leftBtn:before {
+    content: "<";
+}
+
+.slideNormal .rightBtn {
+    right: 0;
+}
+
+.slideNormal .rightBtn:before {
+    content: ">";
+}
+
+.slideNormal .indicator {
+    z-index: 3;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 5px 0;
+    text-align: center;
+    font-size: 0;
+    background: rgba(0, 0, 0, .5);
+}
+
+.slideNormal .indicator i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 2px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+}
+
+.slideNormal .indicator .current {
+    background: #fff;
+}
