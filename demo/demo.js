@@ -1,7 +1,8 @@
 var a = new uiSlide('.loopfixed', {
     width: '100%',   
     fixed: [1, 2, 4, 5],
-    loop: true
+    loop: true,
+    auto: false
 });
 var b = new uiSlide('.unloopunfixed', {
     width: '100%',
