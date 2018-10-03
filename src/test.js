@@ -71,7 +71,7 @@
 
             option.direct = option.ltr?1:-1;
             option.animation = 'margin-left';
-            option.animationTime = 1300;
+            option.animationTime = 900;
             option = Object.assign(option, opt);
             return option;
         }
