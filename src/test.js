@@ -6,7 +6,7 @@
                 method(el[i], arg);
             };
         };
-        var style = function(el, arg, time) {
+        var style = function(el, arg, time, sto) {
             var styleTxt = '';
             var value = new Object;
             var exProp = el.getAttribute('style') === null?'':el.getAttribute('style');
@@ -33,12 +33,14 @@
             };
             if (time > 0) {
                 el.setAttribute('style', styleTxt);
-                setTimeout(function() {
+                clearTimeout(sto);
+                sto = setTimeout(function() {
                     el.setAttribute('style', exProp);
                 }, time);
             }
             if (time < 0) {
-                setTimeout(function() {
+                clearTimeout(sto);
+                sto = setTimeout(function() {
                     el.setAttribute('style', styleTxt);
                 }, -time);
             };
@@ -93,13 +95,14 @@
         var option = utils.returnOption(opt);
         var ing = function() {
             ctr.ing = true;
-            ctr.sto = setTimeout(function() {
+            ctr.ingSto = setTimeout(function() {
                 ctr.ing = false;
             }, option.animationTime);
         };
         var init = (function() {
             ctr.siv;
-            ctr.sto;
+            ctr.ingSto;
+            ctr.aniSto;
             ctr.ing = false;
             ctr.slide = elem;
             ctr.slideWidth = ctr.slide.offsetWidth;
@@ -142,18 +145,18 @@
                 var _width = ctr.item[idx].offsetWidth;
                 if(option.loop && (_cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1 || _cloneCurrentIdx < 0)) {
                     utils.style(ctr.wrap, {'margin-left': -_width * _cloneCurrentIdx + 'px'});
-                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -option.animationTime - 1);
+                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -(option.animationTime + 1), ctr.aniSto);
                 } else {
                     utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'});
                 };
-                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
+                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
                 if(option.indicator) {
                     ctr.indicators[_exIdx].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx].classList.add(option.currentClassName);
                 };
                 // if(_currentIdx !== _exIdx) {
                 //     utils.style(ctr.item[_exIdx], {'z-index': '0'});
-                //     utils.style(ctr.item[_exIdx], {'z-index': '1'}, option.animationTime);
+                //     utils.style(ctr.item[_exIdx], {'z-index': '1'}, option.animationTime, ctr.aniSto);
                 // };
                 utils.style(ctr.item[_exIdx], {'z-index': '1'});
                 utils.style(ctr.item[_currentIdx], {'z-index': '2'});
