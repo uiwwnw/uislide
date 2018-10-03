@@ -1,6 +1,9 @@
 ## demo
 
-[jsbin's demo](https://output.jsbin.com/fanusut)
+[jsbin's demo](https://jsbin.com/fanusut)
+[jsfiddle's demo](https://jsfiddle.net/uiwwnw/uqxtzjds/)
+[uiwwnw's blog](https://uiwwnw.github.io/jekyll/update/2018/10/02/uislide.html)
+
 
 ## 설명
 

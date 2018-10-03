@@ -246,7 +246,7 @@
             move: move,
             autoStart: autoStart,
             autoStop: autoStop,
-            index: function(){return idx}
+            index: function(){return idx;}
         }
     };
     root.uiSlide = uiSlide;
