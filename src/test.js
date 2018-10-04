@@ -71,7 +71,7 @@
 
             option.direct = option.ltr?1:-1;
             option.animation = 'margin-left';
-            option.animationTime = 900;
+            option.animationTime = 499;
             option = Object.assign(option, opt);
             return option;
         }
@@ -154,10 +154,6 @@
                     ctr.indicators[_exIdx].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx].classList.add(option.currentClassName);
                 };
-                // if(_currentIdx !== _exIdx) {
-                //     utils.style(ctr.item[_exIdx], {'z-index': '0'});
-                //     utils.style(ctr.item[_exIdx], {'z-index': '1'}, option.animationTime, ctr.aniSto);
-                // };
                 utils.style(ctr.item[_exIdx], {'z-index': '1'});
                 utils.style(ctr.item[_currentIdx], {'z-index': '2'});
                 ctr.item[_exIdx].classList.remove(option.currentClassName);
