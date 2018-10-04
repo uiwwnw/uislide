@@ -6,15 +6,17 @@ img {
 }
 
 ul {
+    display: flex;
     padding: 0;
 }
 
 li {
+    flex-shrink: 0;
     list-style: none;
 }
 
 .slideNormal {
-    width: 100%;
+    overflow: hidden;
     height: 300px;
 }
 
@@ -40,6 +42,7 @@ li {
 
 .slideNormal li {
     position: relative;
+    width: 100%;
     height: 100%;
 }
 

@@ -1,6 +1,13 @@
 ;(function() {
     var root = this;
     var utils = (function() {
+        var ready = function(fn) {
+            if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
+              fn();
+            } else {
+              document.addEventListener('DOMContentLoaded', fn);
+            }
+          }
         var repeat = function(el, method, arg) {
             for(var i = 0; i < el.length; i++) {
                 method(el[i], arg);
@@ -76,6 +83,7 @@
             return option;
         }
         return {
+            ready: ready,
             returnOption: returnOption,
             style: style,
             repeat: repeat
@@ -135,7 +143,6 @@
         }());
         var move = function(i) {
             if (!ctr.ing) {
-                var _exIdx = idx;
                 i = i === false?idx-option.direct:i;
                 i = i === true?idx+option.direct:i;
                 var _currentIdx = i === undefined?idx+option.direct:i;
@@ -143,20 +150,25 @@
                 _currentIdx = (_currentIdx > ctr.itemLength - 1)?0:_currentIdx;
                 _currentIdx = (_currentIdx < 0)?ctr.itemLength - 1:_currentIdx;
                 var _width = ctr.item[idx].offsetWidth;
-                if(option.loop && (_cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1 || _cloneCurrentIdx < 0)) {
+                if(option.loop && _cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1) {
                     utils.style(ctr.wrap, {'margin-left': -_width * _cloneCurrentIdx + 'px'});
-                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -(option.animationTime + 1), ctr.aniSto);
+                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -Number(option.animationTime + 1), ctr.aniSto);
+                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
+                } else if(option.loop && _cloneCurrentIdx < 0) {
+                    utils.style(ctr.wrap, {'margin-left': -_width * Number(ctr.itemLength - 1 - _cloneCurrentIdx) + 'px'});
+                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px', 'transition-duration': option.animationTime / 1000 + 's'}, -1, ctr.aniSto);
+                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -Number(option.animationTime + 1), ctr.aniSto);
                 } else {
                     utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'});
+                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
                 };
-                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
                 if(option.indicator) {
-                    ctr.indicators[_exIdx].classList.remove(option.currentClassName);
+                    ctr.indicators[idx].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx].classList.add(option.currentClassName);
                 };
-                utils.style(ctr.item[_exIdx], {'z-index': '1'});
+                utils.style(ctr.item[idx], {'z-index': '1'});
                 utils.style(ctr.item[_currentIdx], {'z-index': '2'});
-                ctr.item[_exIdx].classList.remove(option.currentClassName);
+                ctr.item[idx].classList.remove(option.currentClassName);
                 ctr.item[_currentIdx].classList.add(option.currentClassName);
                 // utils.style(ctr.item[_currentIdx], {'z-index': '2', 'position': 'relative'});
                 if (option.fixed !== false) {
@@ -236,8 +248,11 @@
                 }, option.autoTime);
             };
         };
-        move(option.startIndex);
-        autoStart();
+        var start = function() {
+            move(option.startIndex);
+            autoStart();
+        };
+        utils.ready(start);
         return {
             move: move,
             autoStart: autoStart,
