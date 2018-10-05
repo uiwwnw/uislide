@@ -200,8 +200,13 @@
                 moves = start + e.touches[0].screenX;
                 utils.style(ctr.wrap, {'margin-left': position + moves + 'px'});
                 ctr.wrap.setAttribute('data-position', position + moves);
-                direct = moves < -ctr.itemWidth?true:null;
-                direct = moves > ctr.itemWidth?false:null;
+                if (moves < 0) {
+                    direct = true;
+                } else if (moves > 0) {
+                    direct = false;
+                } else {
+                    direct = idx;
+                };
             };
             ctr.slide.ontouchend = function() {
                 autoStart();
