@@ -128,8 +128,8 @@
                 for(var i = 0; i < ctr.cloneLength; i++) {
                     var _a = ctr.item[i].cloneNode(true);
                     var _b = ctr.item[ctr.itemLength - 1 - i].cloneNode(true);
-                    utils.style(_b, {'margin-left': -ctr.item[ctr.itemLength - 1].offsetWidth+'px'});
-                    (option.center && (Math.floor(ctr.cloneLength / 2) === i)) && (utils.style(_b, {'margin-left': 0}));
+                    // utils.style(_b, {'margin-left': -ctr.item[ctr.itemLength - 1].offsetWidth+'px'});
+                    // (option.center && (Math.floor(ctr.cloneLength / 2) === i)) && (utils.style(_b, {'margin-left': 0}));
                     // utils.style(_b, {'position': 'absolute'});
                     _a.classList.add('clone');
                     _b.classList.add('clone');
@@ -150,18 +150,15 @@
                 _currentIdx = (_currentIdx > ctr.itemLength - 1)?0:_currentIdx;
                 _currentIdx = (_currentIdx < 0)?ctr.itemLength - 1:_currentIdx;
                 var _width = ctr.item[idx].offsetWidth;
-                if(option.loop && _cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1) {
-                    utils.style(ctr.wrap, {'margin-left': -_width * _cloneCurrentIdx + 'px'});
-                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -Number(option.animationTime + 1), ctr.aniSto);
-                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
-                } else if(option.loop && _cloneCurrentIdx < 0) {
-                    utils.style(ctr.wrap, {'margin-left': -_width * Number(ctr.itemLength - 1 - _cloneCurrentIdx) + 'px'});
-                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px', 'transition-duration': option.animationTime / 1000 + 's'}, -1, ctr.aniSto);
-                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'}, -Number(option.animationTime + 1), ctr.aniSto);
+                var _infiniteNum = ctr.cloneLength === undefined?0:ctr.cloneLength;
+                _infiniteNum = option.center?_infiniteNum - Math.floor(_infiniteNum / 2):_infiniteNum;
+                if(option.loop && (_cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1 || _cloneCurrentIdx < 0)) {
+                    utils.style(ctr.wrap, {'margin-left': -_width * (_cloneCurrentIdx + _infiniteNum) + 'px'});
+                    utils.style(ctr.wrap, {'margin-left': -_width * (_currentIdx + _infiniteNum) + 'px'}, -Number(option.animationTime + 1), ctr.aniSto);
                 } else {
-                    utils.style(ctr.wrap, {'margin-left': -_width * _currentIdx + 'px'});
-                    utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
+                    utils.style(ctr.wrap, {'margin-left': -_width * (_currentIdx + _infiniteNum) + 'px'});
                 };
+                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
                 if(option.indicator) {
                     ctr.indicators[idx].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx].classList.add(option.currentClassName);
@@ -185,6 +182,16 @@
             } else {
                 return 'work false';
             };
+        };
+        var touch = function() {
+            var move = 0;
+            // ctr.slide.ontouchstart = function(e) {
+            //     start = e.touches[0].screenX;
+            // }
+            ctr.slide.ontouchmove = function(e) {
+                move = e.touches[0].screenX;
+                console.log(move);
+            }
         };
         var indicator = function() {
             if(option.indicator) {
@@ -251,6 +258,7 @@
         var start = function() {
             move(option.startIndex);
             autoStart();
+            // touch();
         };
         utils.ready(start);
         return {
