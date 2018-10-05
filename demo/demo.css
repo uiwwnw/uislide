@@ -1,3 +1,7 @@
+html {
+    font-size: 62.5%;
+}
+
 img {
     display: block;
     width: 100%;
@@ -17,7 +21,7 @@ li {
 
 .slideNormal {
     overflow: hidden;
-    height: 300px;
+    height: 30rem;
 }
 
 .slideNormal.fixed li {
@@ -53,19 +57,19 @@ li {
 
 .slideNormal.width3loopfixed li span {
     left: 50%;
-    margin-left: -70px;
+    margin-left: -7rem;
 }
 
 .slideNormal li span {
     position: absolute;
     top: 50%;
-    left: 50px;
-    width: 140px;
-    height: 100px;
-    margin-top: -50px;
-    line-height: 100px;
+    left: 5rem;
+    width: 14rem;
+    height: 10rem;
+    margin-top: -5rem;
+    line-height: 10rem;
     text-align: center;
-    border: 5px double #333;
+    border: .5rem double #333;
     transition: 1s;
     background: rgba(255, 255, 255, .7);
 }
@@ -74,13 +78,13 @@ li {
     z-index: 3;
     position: absolute;
     top: 50%;
-    width: 30px;
-    height: 30px;
-    margin-top: -15px;
-    font-size: 20px;
+    width: 3rem;
+    height: 3rem;
+    margin-top: -1.5rem;
+    font-size: 2rem;
     color: #333;
     border: none;
-    text-indent: -9999px;
+    text-indent: -9999rem;
     background: rgba(255, 255, 255, .3);
 }
 
@@ -88,7 +92,7 @@ li {
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: -13px -4px;
+    margin: -1.3rem -.4rem;
     text-indent: 0;
     content: "";
 }
@@ -115,7 +119,7 @@ li {
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 5px 0;
+    padding: .5rem 0;
     text-align: center;
     font-size: 0;
     background: rgba(0, 0, 0, .5);
@@ -123,11 +127,11 @@ li {
 
 .slideNormal .indicator i {
     display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin: 2px;
+    width: .8rem;
+    height: .8rem;
+    margin: .2rem;
     border-radius: 50%;
-    border: 1px solid #fff;
+    border: .1rem solid #fff;
 }
 
 .slideNormal .indicator .current {

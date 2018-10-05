@@ -158,6 +158,7 @@
                 } else {
                     utils.style(ctr.wrap, {'margin-left': -_width * (_currentIdx + _infiniteNum) + 'px'});
                 };
+                ctr.wrap.setAttribute('data-position', -_width * (_currentIdx + _infiniteNum));
                 utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
                 if(option.indicator) {
                     ctr.indicators[idx].classList.remove(option.currentClassName);
@@ -184,14 +185,25 @@
             };
         };
         var touch = function() {
-            var move = 0;
-            // ctr.slide.ontouchstart = function(e) {
-            //     start = e.touches[0].screenX;
-            // }
+            var start;
+            var position;
+            var direct;
+            var moves;
+            ctr.slide.ontouchstart = function(e) {
+                start = -e.touches[0].screenX;
+                position = Number(ctr.wrap.getAttribute('data-position'));
+            };
             ctr.slide.ontouchmove = function(e) {
-                move = e.touches[0].screenX;
-                console.log(move);
-            }
+                autoStop();
+                moves = start + e.touches[0].screenX;
+                utils.style(ctr.wrap, {'margin-left': position + moves + 'px'});
+                ctr.wrap.setAttribute('data-position', position + moves);
+                direct = moves < 0?true:false;
+            };
+            ctr.slide.ontouchend = function() {
+                autoStart();
+                move(direct);
+            };
         };
         var indicator = function() {
             if(option.indicator) {
@@ -258,7 +270,7 @@
         var start = function() {
             move(option.startIndex);
             autoStart();
-            // touch();
+            touch();
         };
         utils.ready(start);
         return {
