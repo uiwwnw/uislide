@@ -13,7 +13,7 @@
                 method(el[i], arg);
             };
         };
-        var style = function(el, arg, time, sto) {
+        var style = function(el, arg, time) {
             var styleTxt = '';
             var value = new Object;
             var exProp = el.getAttribute('style') === null?'':el.getAttribute('style');
@@ -40,14 +40,16 @@
             };
             if (time > 0) {
                 el.setAttribute('style', styleTxt);
-                clearTimeout(sto);
-                sto = setTimeout(function() {
+                // clearTimeout(root.sto1);
+                // root.sto1 = setTimeout(function() {
+                setTimeout(function() {
                     el.setAttribute('style', exProp);
                 }, time);
             }
             if (time < 0) {
-                clearTimeout(sto);
-                sto = setTimeout(function() {
+                // clearTimeout(root.sto2);
+                // root.sto2 = setTimeout(function() {
+                setTimeout(function() {
                     el.setAttribute('style', styleTxt);
                 }, -time);
             };
@@ -149,17 +151,17 @@
                 var _cloneCurrentIdx = _currentIdx;
                 _currentIdx = (_currentIdx > ctr.itemLength - 1)?0:_currentIdx;
                 _currentIdx = (_currentIdx < 0)?ctr.itemLength - 1:_currentIdx;
-                var _width = ctr.item[idx].offsetWidth;
+                ctr.itemWidth = ctr.item[idx].offsetWidth;
                 var _infiniteNum = ctr.cloneLength === undefined?0:ctr.cloneLength;
                 _infiniteNum = option.center?_infiniteNum - Math.floor(_infiniteNum / 2):_infiniteNum;
-                if(option.loop && (_cloneCurrentIdx > ctr.itemLength - ctr.cloneLength - 1 || _cloneCurrentIdx < 0)) {
-                    utils.style(ctr.wrap, {'margin-left': -_width * (_cloneCurrentIdx + _infiniteNum) + 'px'});
-                    utils.style(ctr.wrap, {'margin-left': -_width * (_currentIdx + _infiniteNum) + 'px'}, -Number(option.animationTime + 1), ctr.aniSto);
+                if(option.loop && (_cloneCurrentIdx !== _currentIdx)) {
+                    utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + 'px'});
+                    utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px'}, -Number(option.animationTime + 1));
                 } else {
-                    utils.style(ctr.wrap, {'margin-left': -_width * (_currentIdx + _infiniteNum) + 'px'});
+                    utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px'});
                 };
-                ctr.wrap.setAttribute('data-position', -_width * (_currentIdx + _infiniteNum));
-                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime, ctr.aniSto);
+                ctr.wrap.setAttribute('data-position', -ctr.itemWidth * (_currentIdx + _infiniteNum));
+                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
                 if(option.indicator) {
                     ctr.indicators[idx].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx].classList.add(option.currentClassName);
@@ -198,11 +200,12 @@
                 moves = start + e.touches[0].screenX;
                 utils.style(ctr.wrap, {'margin-left': position + moves + 'px'});
                 ctr.wrap.setAttribute('data-position', position + moves);
-                direct = moves < 0?true:false;
+                direct = moves < -ctr.itemWidth?true:null;
+                direct = moves > ctr.itemWidth?false:null;
             };
             ctr.slide.ontouchend = function() {
                 autoStart();
-                move(direct);
+                (direct !== null) && (move(direct));
             };
         };
         var indicator = function() {
