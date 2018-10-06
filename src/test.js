@@ -192,25 +192,27 @@
             var direct;
             var moves;
             ctr.slide.ontouchstart = function(e) {
+                moves = 0;
                 start = -e.touches[0].screenX;
                 position = Number(ctr.wrap.getAttribute('data-position'));
             };
             ctr.slide.ontouchmove = function(e) {
-                autoStop();
-                moves = start + e.touches[0].screenX;
-                utils.style(ctr.wrap, {'margin-left': position + moves + 'px'});
-                ctr.wrap.setAttribute('data-position', position + moves);
+                if(!ctr.ing) {
+                    autoStop();
+                    moves = start + e.touches[0].screenX;
+                    utils.style(ctr.wrap, {'margin-left': position + moves + 'px'});
+                    ctr.wrap.setAttribute('data-position', position + moves);
+                }
+            };
+            ctr.slide.ontouchend = function() {
                 if (moves < 0) {
                     direct = true;
                 } else if (moves > 0) {
                     direct = false;
                 } else {
-                    direct = idx;
+                    direct = undefined;
                 };
-            };
-            ctr.slide.ontouchend = function() {
-                autoStart();
-                (direct !== null) && (move(direct));
+                (direct !== undefined) && (autoStart(), move(direct));
             };
         };
         var indicator = function() {
