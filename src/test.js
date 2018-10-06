@@ -13,7 +13,48 @@
                 method(el[i], arg);
             };
         };
-        var style = function(el, arg, time) {
+        // var style = function(el, arg, time) {
+        //     var styleTxt = '';
+        //     var value = new Object;
+        //     var exProp = el.getAttribute('style') === null?'':el.getAttribute('style');
+        //     var _val = (function() {
+        //         if (exProp === '') {
+        //             return false;
+        //         };
+        //         var a = exProp.split(';');
+        //         for(var i = 0; i < a.length; i++) {
+        //             var _a = a[i].split(':');
+        //             if(_a[0] !== '') {
+        //                 value[_a[0].replace(/(^\s*)|(\s*$)/, '')] = _a[1].replace(/(^\s*)|(\s*$)/, '');;
+        //             }
+        //         };
+        //     }());
+        //     value = Object.assign(value, arg);
+        //     for (var i in value) {
+        //         if(value[i] !== undefined) {
+        //             styleTxt +=  i + ': ' + value[i] + ';';
+        //         };
+        //     };
+        //     if (time === undefined) {
+        //         el.setAttribute('style', styleTxt);
+        //     };
+        //     if (time > 0) {
+        //         el.setAttribute('style', styleTxt);
+        //         // clearTimeout(root.sto1);
+        //         // root.sto1 = setTimeout(function() {
+        //         setTimeout(function() {
+        //             el.setAttribute('style', exProp);
+        //         }, time);
+        //     }
+        //     if (time < 0) {
+        //         // clearTimeout(root.sto2);
+        //         // root.sto2 = setTimeout(function() {
+        //         setTimeout(function() {
+        //             el.setAttribute('style', styleTxt);
+        //         }, -time);
+        //     };
+        // };
+        var style = function(el, arg) {
             var styleTxt = '';
             var value = new Object;
             var exProp = el.getAttribute('style') === null?'':el.getAttribute('style');
@@ -35,24 +76,7 @@
                     styleTxt +=  i + ': ' + value[i] + ';';
                 };
             };
-            if (time === undefined) {
-                el.setAttribute('style', styleTxt);
-            };
-            if (time > 0) {
-                el.setAttribute('style', styleTxt);
-                // clearTimeout(root.sto1);
-                // root.sto1 = setTimeout(function() {
-                setTimeout(function() {
-                    el.setAttribute('style', exProp);
-                }, time);
-            }
-            if (time < 0) {
-                // clearTimeout(root.sto2);
-                // root.sto2 = setTimeout(function() {
-                setTimeout(function() {
-                    el.setAttribute('style', styleTxt);
-                }, -time);
-            };
+            el.setAttribute('style', styleTxt);
         };
         var returnOption = function(opt) {
             var option = {};
@@ -121,7 +145,7 @@
             ctr.item = Array.prototype.slice.call(ctr.wrap.children);
             ctr.itemLength = ctr.item.length;
             utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'});
-            utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition': option.animation + ' 0s ease'});
+            utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition': option.animation + ' ease'});
             utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
             if(option.loop) {
                 ctr.cloneLength = Math.floor(ctr.slideWidth / ctr.item[0].offsetWidth);
@@ -143,25 +167,53 @@
             };
             // utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
         }());
+        
         var move = function(i) {
+            var start = null;
+            // function act(timestamp) {
+            //     if (!start) start = timestamp;
+            //     var progress = timestamp - start;
+            //     if (progress < option.animationTime) {
+            //         utils.style(ctr.wrap, {'transition-duration': progress / opt.animationTime, 'margin-left': - 1/progress * (ctr.itemWidth * (_currentIdx + _infiniteNum)) + 'px'});
+            //         window.requestAnimationFrame(act);
+            //     } else {
+            //         utils.style(ctr.wrap, {'transition-duration': 0});
+            //     };
+            // };
+            // function act(t) {
+            //     clearTimeout(ctr.aniSto);
+            //     utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + 'px', 'transition-duration': 0});
+            //     ctr.aniSto1 = setTimeout(function() {
+            //         utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px', 'transition-duration': option.animationTime / 1000 + 's'});
+            //     }, 5);
+            //     ctr.aniSto2 = setTimeout(function() {
+            //         utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px', 'transition-duration': 0});
+            //     }, t);
+            // };
+            function act(t) {
+                clearTimeout(ctr.aniSto);
+                utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + 'px', 'transition-duration': option.animationTime / 1000 + 's'});
+                ctr.aniSto = setTimeout(function() {
+                    utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px', 'transition-duration': 0});
+                }, t);
+            };
             if (!ctr.ing) {
                 i = i === false?idx-option.direct:i;
                 i = i === true?idx+option.direct:i;
                 var _currentIdx = i === undefined?idx+option.direct:i;
                 var _cloneCurrentIdx = _currentIdx;
+                //     if (_cloneCurrentIdx < 0) {
+                //         _cloneCurrentIdx = ctr.itemLength + 1 + _cloneCurrentIdx;
+                //     } else if (_cloneCurrentIdx > ctr.itemLength - 1) {
+                //         _cloneCurrentIdx = ctr.itemLength - _cloneCurrentIdx - 1;
+                //     };
                 _currentIdx = (_currentIdx > ctr.itemLength - 1)?0:_currentIdx;
                 _currentIdx = (_currentIdx < 0)?ctr.itemLength - 1:_currentIdx;
                 ctr.itemWidth = ctr.item[idx].offsetWidth;
                 var _infiniteNum = ctr.cloneLength === undefined?0:ctr.cloneLength;
                 _infiniteNum = option.center?_infiniteNum - Math.floor(_infiniteNum / 2):_infiniteNum;
-                if(option.loop && (_cloneCurrentIdx !== _currentIdx)) {
-                    utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + 'px'});
-                    utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px'}, -Number(option.animationTime + 1));
-                } else {
-                    utils.style(ctr.wrap, {'margin-left': -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px'});
-                };
+                act(option.animationTime);
                 ctr.wrap.setAttribute('data-position', -ctr.itemWidth * (_currentIdx + _infiniteNum));
-                utils.style(ctr.wrap, {'transition-duration': option.animationTime / 1000 + 's'}, option.animationTime);
                 if(option.indicator) {
                     ctr.indicators[idx].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx].classList.add(option.currentClassName);
@@ -181,7 +233,7 @@
                 };
                 idx = _currentIdx;
                 ing();
-                return 'work done'
+                return 'work done';
             } else {
                 return 'work false';
             };
