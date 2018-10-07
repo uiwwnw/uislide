@@ -11,7 +11,16 @@ var b = new uiSlide('.unloopunfixed', {
 var c = new uiSlide('.width3loopfixed', {
     width: 'calc(100% / 3)',
     loop: true,
-    autoTime: 3400,
+    autoTime: 4400,
+    fixed: [5, 8],
+    center: true
+});
+var d = new uiSlide('.width3loopfixed3', {
+    width: 'calc(100% / 3)',
+    slideEa: 3,
+    loop: true,
+    autoTime: 7000,
+    animationTime: 2300,
     fixed: [5, 8],
     center: true
 });

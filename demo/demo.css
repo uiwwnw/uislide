@@ -50,14 +50,10 @@ li {
     height: 100%;
 }
 
-.slideNormal.width3loopfixed li {
-    padding: 0 5%;
-    box-sizing: border-box;
-}
-
-.slideNormal.width3loopfixed li span {
+.slideNormal.width3loopfixed li span ,
+.slideNormal.width3loopfixed3 li span {
     left: 50%;
-    margin-left: -7rem;
+    margin-left: -7.5rem;
 }
 
 .slideNormal li span {

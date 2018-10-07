@@ -91,6 +91,7 @@
             var option = {};
             option.ltr = true;
             option.startIndex = 0;
+            option.slideEa = 1;
 
             option.loop = false;
             option.double = false;
@@ -117,10 +118,10 @@
             option.indicator = true;
             option.indicatorClassName = 'indicator';
 
-            option.direct = option.ltr?1:-1;
             option.animation = 'margin-left';
             option.animationTime = 499;
             option = Object.assign(option, opt);
+            option.direct = option.ltr?option.slideEa:-option.slideEa;
             return option;
         }
         return {
@@ -220,9 +221,9 @@
                 var _currentIdx = i === undefined?idx+option.direct:i;
                 var _cloneCurrentIdx = _currentIdx;
                 if (_cloneCurrentIdx < 0) {
-                    _cloneCurrentIdx = ctr.itemLength + 1 + _cloneCurrentIdx;
+                    _cloneCurrentIdx = ctr.itemLength;
                 } else if (_cloneCurrentIdx > ctr.itemLength - 1) {
-                    _cloneCurrentIdx = ctr.itemLength - _cloneCurrentIdx - 1;
+                    _cloneCurrentIdx = - 1;
                 } else {
                     _cloneCurrentIdx = idx;
                 };
@@ -233,8 +234,8 @@
                 _infiniteNum = option.center?_infiniteNum - Math.floor(_infiniteNum / 2):_infiniteNum;
                 act();
                 if(option.indicator) {
-                    ctr.indicators[idx].classList.remove(option.currentClassName);
-                    ctr.indicators[_currentIdx].classList.add(option.currentClassName);
+                    ctr.indicators[idx/option.direct].classList.remove(option.currentClassName);
+                    ctr.indicators[_currentIdx/option.direct].classList.add(option.currentClassName);
                 };
                 // utils.style(ctr.item[idx], {'z-index': '1'});
                 // utils.style(ctr.item[_currentIdx], {'z-index': '2'});
@@ -296,13 +297,13 @@
                 ctr.indicators = ctr.indicator.childNodes;
                 ctr.slide.append(ctr.indicator);
                 ctr.indicator.classList.add(option.indicatorClassName);
-                for(var i = 0; i < ctr.itemLength; i++) {
+                for(var i = 0; i < ctr.itemLength / option.direct; i++) {
                     var _idc = document.createElement('i');
                     ctr.indicator.append(_idc);
                     _idc.setAttribute('data-index', i);
                     _idc.onclick = function() {
                         autoStop();
-                        move(Number(this.getAttribute('data-index')));
+                        move(Number(this.getAttribute('data-index') * option.direct));
                         clearTimeout(ctr.btnSto);
                         ctr.btnSto = setTimeout(function() {
                             autoStart();

@@ -23,6 +23,7 @@ var a = new uiSlide(selector, {
     double: false, // Allow fast clicks
 
     width: '100%', // slide item width
+    slideEa: 1, // slide ea
     center: false, // When multiple, centered
 
     touchSafeWidth: 50, //
