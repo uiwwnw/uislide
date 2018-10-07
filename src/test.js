@@ -199,14 +199,17 @@
             // };
             function act() {
                 var exx = x === undefined ? 0:x;
-                function callback() {
+                function _act() {
                     ctr.wrap.style.transitionDuration = option.animationTime / 1000 + 's';
                     ctr.wrap.style.marginLeft = -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px';
                 };
-                ctr.wrap.style.transitionDuration = '0s';
-                ctr.wrap.style.marginLeft = -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx + 'px';
+                function _iniAct() {
+                    ctr.wrap.style.transitionDuration = '0s';
+                    ctr.wrap.style.marginLeft = -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx + 'px';
+                };
+                (option.loop) && (_iniAct());
                 clearTimeout(ctr.aniSto);
-                ctr.aniSto = setTimeout(callback, 10);
+                ctr.aniSto = setTimeout(_act, 10);
             };
             // function act(t) {
             //     clearTimeout(ctr.aniSto);
