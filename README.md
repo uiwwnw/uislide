@@ -20,6 +20,10 @@ var a = new uiSlide(selector, {
     startIndex:0, // slide start index
 
     loop:false, // infinite loop
+    double: false, // Allow fast clicks
+
+    width: '100%', // slide item width
+    center: false, // When multiple, centered
 
     auto:true, // auto start 
     autoTime:2000, // auto slide duration

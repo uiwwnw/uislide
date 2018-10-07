@@ -1,10 +1,9 @@
 var a = new uiSlide('.loopfixed', {
-    width: '100%',   
     fixed: [1, 2, 4, 5],
+    double: true,
     loop: true
 });
 var b = new uiSlide('.unloopunfixed', {
-    width: '100%',
     autoTime: 3600,
     indicator: false,
     button: false
