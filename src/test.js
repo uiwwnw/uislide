@@ -96,6 +96,7 @@
             option.double = false;
 
             option.auto = true;
+            option.autoIng = false;
             option.autoTime = 3000;
 
             option.width = '100%',
@@ -106,6 +107,8 @@
 
             option.fixed = false;
             option.center = false;
+
+            option.touchSafeWidth = 50;
 
             option.button = true;
             option.buttonLeftClassName = 'leftBtn';
@@ -181,7 +184,7 @@
             // utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
         }());
         
-        var move = function(i) {
+        var move = function(i, x) {
             // var start = null;
             // function act(timestamp) {
             //     if (!start) start = timestamp;
@@ -194,12 +197,13 @@
             //     };
             // };
             function act() {
+                var exx = x === undefined ? 0:x;
                 function callback() {
                     ctr.wrap.style.transitionDuration = option.animationTime / 1000 + 's';
                     ctr.wrap.style.marginLeft = -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px';
                 };
                 ctr.wrap.style.transitionDuration = '0s';
-                ctr.wrap.style.marginLeft = -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + 'px';
+                ctr.wrap.style.marginLeft = -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx + 'px';
                 clearTimeout(ctr.aniSto);
                 ctr.aniSto = setTimeout(callback, 10);
             };
@@ -269,26 +273,23 @@
             };
             ctr.slide.ontouchmove = function(e) {
                 if(option.double || !ctr.ing) {
-                    autoStop();
                     movex = start + e.touches[0].screenX;
-                    utils.style(ctr.wrap, {'margin-left': position + movex + 'px'});
+                    ctr.wrap.style.transitionDuration =  '0s';
+                    ctr.wrap.style.marginLeft =  position + movex + 'px';
                     ctr.wrap.setAttribute('data-position', position + movex);
+                    (Math.abs(movex) > option.touchSafeWidth) && (autoStop());
                 }
-                // if (Math.abs(movex) > 30) {
-                //     e.touches[0].screenY = movey;
-                //     console.log(e.touches[0].screenY, movey);
-                //     return e.touches[0].screenY;
-                // }
             };
             ctr.slide.ontouchend = function() {
-                if (movex < 0) {
+                if (movex < -option.touchSafeWidth) {
                     direct = true;
-                } else if (movex > 0) {
+                } else if (movex > option.touchSafeWidth) {
                     direct = false;
-                } else {
-                    direct = undefined;
+                } else if (movex >= -option.touchSafeWidth && movex <= option.touchSafeWidth) {
+                    direct = idx;
                 };
-                (direct !== undefined) && (autoStart(), move(direct));
+                (!option.autoIng) && (autoStart());
+                (direct !== undefined) && (move(direct, movex));
             };
         };
         var indicator = function() {
@@ -343,11 +344,13 @@
         var autoStop = function() {
             if(option.auto) {
                 clearInterval(ctr.siv);
+                option.autoIng = false;
             };
         };
         var autoStart = function() {
             if(option.auto) {
                 autoStop();
+                option.autoIng = true;
                 ctr.siv = setInterval(function() {
                     move();
                 }, option.autoTime);

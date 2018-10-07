@@ -25,6 +25,8 @@ var a = new uiSlide(selector, {
     width: '100%', // slide item width
     center: false, // When multiple, centered
 
+    touchSafeWidth: 50, //
+
     auto:true, // auto start 
     autoTime:2000, // auto slide duration
     animationTime:700 // animation duration
