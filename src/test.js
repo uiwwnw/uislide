@@ -259,24 +259,31 @@
             var start;
             var position;
             var direct;
-            var moves;
+            var movex;
+            var movey;
             ctr.slide.ontouchstart = function(e) {
-                moves = 0;
+                movex = 0;
+                movey = e.touches[0].screenY;
                 start = -e.touches[0].screenX;
                 position = Number(ctr.wrap.getAttribute('data-position'));
             };
             ctr.slide.ontouchmove = function(e) {
                 if(option.double || !ctr.ing) {
                     autoStop();
-                    moves = start + e.touches[0].screenX;
-                    utils.style(ctr.wrap, {'margin-left': position + moves + 'px'});
-                    ctr.wrap.setAttribute('data-position', position + moves);
+                    movex = start + e.touches[0].screenX;
+                    utils.style(ctr.wrap, {'margin-left': position + movex + 'px'});
+                    ctr.wrap.setAttribute('data-position', position + movex);
                 }
+                // if (Math.abs(movex) > 30) {
+                //     e.touches[0].screenY = movey;
+                //     console.log(e.touches[0].screenY, movey);
+                //     return e.touches[0].screenY;
+                // }
             };
             ctr.slide.ontouchend = function() {
-                if (moves < 0) {
+                if (movex < 0) {
                     direct = true;
-                } else if (moves > 0) {
+                } else if (movex > 0) {
                     direct = false;
                 } else {
                     direct = undefined;
