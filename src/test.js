@@ -232,7 +232,6 @@
                 var _infiniteNum = ctr.cloneLength === undefined?0:ctr.cloneLength;
                 _infiniteNum = option.center?_infiniteNum - Math.floor(_infiniteNum / 2):_infiniteNum;
                 act();
-                ctr.wrap.setAttribute('data-position', -ctr.itemWidth * (_currentIdx + _infiniteNum));
                 if(option.indicator) {
                     ctr.indicators[idx].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx].classList.add(option.currentClassName);
@@ -269,14 +268,13 @@
                 movex = 0;
                 movey = e.touches[0].screenY;
                 start = -e.touches[0].screenX;
-                position = Number(ctr.wrap.getAttribute('data-position'));
+                position = Number(ctr.wrap.style.marginLeft.replace('px', ''));
             };
             ctr.slide.ontouchmove = function(e) {
                 if(option.double || !ctr.ing) {
                     movex = start + e.touches[0].screenX;
                     ctr.wrap.style.transitionDuration =  '0s';
                     ctr.wrap.style.marginLeft =  position + movex + 'px';
-                    ctr.wrap.setAttribute('data-position', position + movex);
                     (Math.abs(movex) > option.touchSafeWidth) && (autoStop());
                 }
             };
