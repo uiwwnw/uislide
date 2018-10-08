@@ -22,8 +22,8 @@ var a = new uiSlide(selector, {
     loop:false, // infinite loop
     double: false, // Allow fast clicks
 
-    width: '100%', // slide item width
-    slideEa: 1, // slide ea
+    view: 1, // Number of slides shown
+    slideNumber: 1, // Number of slides to move at once
     center: false, // When multiple, centered
 
     touchSafeWidth: 50, //

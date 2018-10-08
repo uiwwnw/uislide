@@ -9,15 +9,15 @@ var b = new uiSlide('.unloopunfixed', {
     button: false
 });
 var c = new uiSlide('.width3loopfixed', {
-    width: 'calc(100% / 3)',
+    view: 3,
     loop: true,
     autoTime: 4400,
     fixed: [5, 8],
     center: true
 });
 var d = new uiSlide('.width3loopfixed3', {
-    width: 'calc(100% / 3)',
-    slideEa: 3,
+    view: 3,
+    slideNumber: 3,
     loop: true,
     autoTime: 7000,
     animationTime: 1000,
