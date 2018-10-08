@@ -117,8 +117,7 @@
 
             option.indicator = true;
             option.indicatorClassName = 'indicator';
-
-            option.animation = 'margin-left';
+            
             option.animationTime = 499;
             option = Object.assign(option, opt);
             option.direct = option.ltr?option.slideEa:-option.slideEa;
@@ -201,11 +200,11 @@
                 var exx = x === undefined ? 0:x;
                 function _act() {
                     ctr.wrap.style.transitionDuration = option.animationTime / 1000 + 's';
-                    ctr.wrap.style.marginLeft = -ctr.itemWidth * (_currentIdx + _infiniteNum) + 'px';
+                    ctr.wrap.style.transform = 'translateX(' + Number(-ctr.itemWidth * (_currentIdx + _infiniteNum)) + 'px)';
                 };
                 function _iniAct() {
                     ctr.wrap.style.transitionDuration = '0s';
-                    ctr.wrap.style.marginLeft = -ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx + 'px';
+                    ctr.wrap.style.transform = 'translateX(' + Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx) + 'px)';
                 };
                 (option.loop) && (_iniAct());
                 clearTimeout(ctr.aniSto);
@@ -272,13 +271,14 @@
                 movex = 0;
                 movey = e.touches[0].screenY;
                 start = -e.touches[0].screenX;
-                position = Number(ctr.wrap.style.marginLeft.replace('px', ''));
+                position = ctr.wrap.style.transform.replace('translateX(', '');
+                position = Number(position.replace('px)', ''));
             };
             ctr.slide.ontouchmove = function(e) {
                 if(option.double || !ctr.ing) {
                     movex = start + e.touches[0].screenX;
                     ctr.wrap.style.transitionDuration =  '0s';
-                    ctr.wrap.style.marginLeft =  position + movex + 'px';
+                    ctr.wrap.style.transform = 'translateX(' +  position + movex + 'px)';
                     (Math.abs(movex) > option.touchSafeWidth) && (autoStop());
                 }
             };
