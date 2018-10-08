@@ -20,7 +20,6 @@ var d = new uiSlide('.width3loopfixed3', {
     slideEa: 3,
     loop: true,
     autoTime: 7000,
-    animationTime: 2300,
-    fixed: [5, 8],
+    animationTime: 1000,
     center: true
 });

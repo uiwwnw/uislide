@@ -79,14 +79,6 @@
             (callback !== undefined) && (callback());
             el.setAttribute('style', styleTxt);
         };
-        var transition = function(el, fn) {
-            el.removeEventListener("transitionend", function() {
-                fn();
-              }, false);
-            el.addEventListener("transitionend", function() {
-                fn();
-              }, false);
-        };
         var returnOption = function(opt) {
             var option = {};
             option.ltr = true;
@@ -126,7 +118,6 @@
         return {
             ready: ready,
             returnOption: returnOption,
-            transition: transition,
             style: style,
             repeat: repeat
         }
@@ -161,7 +152,7 @@
             ctr.item = Array.prototype.slice.call(ctr.wrap.children);
             ctr.itemLength = ctr.item.length;
             utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'});
-            utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition-property': option.animation});
+            utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth+'px','transition-property': 'transform', 'will-change': 'transform'});
             utils.repeat(ctr.item, utils.style, {'z-index': option.zIndex?1:undefined,'flex-shrink': '0', 'width': option.width});
             if(option.loop) {
                 ctr.cloneLength = Math.floor(ctr.slideWidth / ctr.item[0].offsetWidth);
@@ -199,12 +190,34 @@
             function act() {
                 var exx = x === undefined ? 0:x;
                 function _act() {
+                    var _width = Number(-ctr.itemWidth * (_currentIdx + _infiniteNum));
                     ctr.wrap.style.transitionDuration = option.animationTime / 1000 + 's';
-                    ctr.wrap.style.transform = 'translateX(' + Number(-ctr.itemWidth * (_currentIdx + _infiniteNum)) + 'px)';
+                    if(option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
+                        ctr.wrap.style.transitionProperty = 'margin-left';
+                        ctr.wrap.style.willChange = 'margin-left';
+                        ctr.wrap.style.transform = 'none';
+                        ctr.wrap.style.marginLeft = _width + 'px';
+                    } else {
+                        ctr.wrap.style.transitionProperty = 'transform';
+                        ctr.wrap.style.willChange = 'transform';
+                        ctr.wrap.style.marginLeft = 'auto';
+                        ctr.wrap.style.transform = 'translateX(' + _width + 'px)';
+                    };
                 };
                 function _iniAct() {
+                    var _width = Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx);
                     ctr.wrap.style.transitionDuration = '0s';
-                    ctr.wrap.style.transform = 'translateX(' + Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx) + 'px)';
+                    if(option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
+                        ctr.wrap.style.transitionProperty = 'margin-left';
+                        ctr.wrap.style.willChange = 'margin-left';
+                        ctr.wrap.style.transform = 'none';
+                        ctr.wrap.style.marginLeft = _width + 'px';
+                    } else {
+                        ctr.wrap.style.transitionProperty = 'transform';
+                        ctr.wrap.style.willChange = 'transform';
+                        ctr.wrap.style.marginLeft = 'auto';
+                        ctr.wrap.style.transform = 'translateX(' + _width + 'px)';
+                    }
                 };
                 (option.loop) && (_iniAct());
                 clearTimeout(ctr.aniSto);
@@ -263,7 +276,8 @@
         };
         var touch = function() {
             var start;
-            var position;
+            var margin;
+            var transformX;
             var direct;
             var movex;
             var movey;
@@ -271,14 +285,16 @@
                 movex = 0;
                 movey = e.touches[0].screenY;
                 start = -e.touches[0].screenX;
-                position = ctr.wrap.style.transform.replace('translateX(', '');
-                position = Number(position.replace('px)', ''));
+                transformX = ctr.wrap.style.transform.replace('translateX(', '');
+                transformX = Number(transformX.replace('px)', ''));
+                margin = Number(ctr.wrap.style.marginLeft.replace('px', ''));
             };
             ctr.slide.ontouchmove = function(e) {
                 if(option.double || !ctr.ing) {
                     movex = start + e.touches[0].screenX;
                     ctr.wrap.style.transitionDuration =  '0s';
-                    ctr.wrap.style.transform = 'translateX(' +  position + movex + 'px)';
+                    (ctr.wrap.style.transform !== 'none') && (ctr.wrap.style.transform = 'translateX(' +  Number(transformX + movex) + 'px)');
+                    (ctr.wrap.style.marginLeft !== 'auto') && (ctr.wrap.style.marginLeft = Number(margin + movex) + 'px');
                     (Math.abs(movex) > option.touchSafeWidth) && (autoStop());
                 }
             };
