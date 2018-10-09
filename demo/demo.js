@@ -6,6 +6,7 @@ var a = new uiSlide('.loopfixed', {
 var b = new uiSlide('.unloopunfixed', {
     autoTime: 3600,
     indicator: false,
+    fixed: [5, 8],
     button: false
 });
 var c = new uiSlide('.width3loopfixed', {
