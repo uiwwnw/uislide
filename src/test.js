@@ -59,7 +59,7 @@
             option.fixed = false;
             option.center = false;
 
-            option.touchSafeWidth = 50;
+            option.touchSafeWidth = 40;
 
             option.button = true;
             option.buttonLeftClassName = 'leftBtn';
@@ -106,14 +106,14 @@
             ctr.slide = elem;
             ctr.slideWidth = ctr.slide.offsetWidth;
             ctr.wrap = ctr.slide.children[0];
-            // ctr.item = ctr.wrap.childNodes;
             ctr.item = Array.prototype.slice.call(ctr.wrap.children);
+            ctr.itemWidth = ctr.slideWidth / option.view;
             ctr.itemLength = ctr.item.length;
             utils.style(ctr.slide, { 'overflow': 'hidden', 'position': 'relative' });
             utils.style(ctr.wrap, { 'display': 'flex', 'width': ctr.slideWidth + 'px', 'transition-property': 'transform', 'will-change': 'transform' });
             utils.repeat(ctr.item, utils.style, { 'z-index': option.zIndex ? 1 : undefined, 'flex-shrink': '0', 'width': 1/option.view * 100 + '%' });
             if (option.loop) {
-                ctr.cloneLength = Math.floor(ctr.slideWidth / ctr.item[0].offsetWidth);
+                ctr.cloneLength = option.view;
                 ctr.afterClone = [];
                 ctr.beforeClone = [];
                 for (var i = 0; i < ctr.cloneLength; i++) {
@@ -131,10 +131,10 @@
 
         var move = function (i, x) {
             function act() {
-                var exx = x === undefined ? 0 : x;
-                function _act() {
-                    var _width = Number(-ctr.itemWidth * (_currentIdx + _infiniteNum));
-                    ctr.wrap.style.transitionDuration = option.animationTime / 1000 + 's';
+                function _act(idx, time, x) {
+                    var exx = x === undefined ? 0 : x;
+                    var _width = Number(-ctr.itemWidth * (idx + _infiniteNum) + exx);
+                    ctr.wrap.style.transitionDuration = time + 's';
                     if (option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
                         ctr.wrap.style.transitionProperty = 'margin-left';
                         ctr.wrap.style.willChange = 'margin-left';
@@ -147,42 +147,35 @@
                         ctr.wrap.style.transform = 'translateX(' + _width + 'px)';
                     };
                 };
-                function _iniAct() {
-                    var _width = Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + exx);
-                    ctr.wrap.style.transitionDuration = '0s';
-                    if (option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
-                        ctr.wrap.style.transitionProperty = 'margin-left';
-                        ctr.wrap.style.willChange = 'margin-left';
-                        ctr.wrap.style.transform = 'none';
-                        ctr.wrap.style.marginLeft = _width + 'px';
-                    } else {
-                        ctr.wrap.style.transitionProperty = 'transform';
-                        ctr.wrap.style.willChange = 'transform';
-                        ctr.wrap.style.marginLeft = 'auto';
-                        ctr.wrap.style.transform = 'translateX(' + _width + 'px)';
-                    }
-                };
-                (option.loop) && (_iniAct());
+                (option.loop && _cloneCurrentIdx !== _currentIdx) && (_act(_cloneCurrentIdx, 0, x));
                 clearTimeout(ctr.aniSto);
-                ctr.aniSto = setTimeout(_act, 10);
+                ctr.aniSto = setTimeout(function() {
+                    _act(_currentIdx, option.animationTime / 1000);
+                }, 20);
             };
             if (option.double || !ctr.ing) {
-                i = i === false ? idx - option.direct : i;
-                i = i === true ? idx + option.direct : i;
-                var _currentIdx = i === undefined ? idx + option.direct : i;
+                var _currentIdx;
                 var _cloneCurrentIdx = _currentIdx;
-                if (_cloneCurrentIdx < 0) {
-                    _cloneCurrentIdx = ctr.itemLength;
-                } else if (_cloneCurrentIdx > ctr.itemLength - 1) {
-                    _cloneCurrentIdx = - 1;
-                } else {
-                    _cloneCurrentIdx = idx;
-                };
-                _currentIdx = (_currentIdx > ctr.itemLength - 1) ? 0 : _currentIdx;
-                _currentIdx = (_currentIdx < 0) ? ctr.itemLength - 1 : _currentIdx;
-                ctr.itemWidth = ctr.item[idx].offsetWidth;
                 var _infiniteNum = ctr.cloneLength === undefined ? 0 : ctr.cloneLength;
                 _infiniteNum = option.center ? _infiniteNum - Math.floor(_infiniteNum / 2) : _infiniteNum;
+                if(i === false) {
+                    _currentIdx = idx - option.direct;
+                } else if (i === true || i === undefined) {
+                    _currentIdx = idx + option.direct;
+                } else {
+                    _currentIdx = i;
+                };
+                if (_currentIdx < 0) {
+                    _currentIdx = ctr.itemLength - 1;
+                    _cloneCurrentIdx = ctr.itemLength;
+                } else if(_currentIdx > ctr.itemLength - 1) {
+                    _currentIdx = 0;
+                    _cloneCurrentIdx = - 1;
+                } else {
+                    _currentIdx = _currentIdx;
+                    _cloneCurrentIdx = idx;
+                };
+                
                 act();
                 if (option.indicator) {
                     ctr.indicators[idx / option.direct].classList.remove(option.currentClassName);
@@ -236,7 +229,9 @@
                     direct = true;
                 } else if (movex > option.touchSafeWidth) {
                     direct = false;
-                } else if (movex >= -option.touchSafeWidth && movex <= option.touchSafeWidth) {
+                } else if (movex === 0) {
+                    direct = undefined;   
+                } else {
                     direct = idx;
                 };
                 (!option.autoIng) && (autoStart());
