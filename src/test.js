@@ -13,30 +13,6 @@
                 method(el[i], arg);
             };
         };
-        var style = function (el, arg) {
-            var styleTxt = '';
-            var value = new Object;
-            var exProp = el.getAttribute('style') === null ? '' : el.getAttribute('style');
-            var _val = (function () {
-                if (exProp === '') {
-                    return false;
-                };
-                var a = exProp.split(';');
-                for (var i = 0; i < a.length; i++) {
-                    var _a = a[i].split(':');
-                    if (_a[0] !== '') {
-                        value[_a[0].replace(/(^\s*)|(\s*$)/, '')] = _a[1].replace(/(^\s*)|(\s*$)/, '');;
-                    }
-                };
-            }());
-            value = Object.assign(value, arg);
-            for (var i in value) {
-                if (value[i] !== undefined) {
-                    styleTxt += i + ': ' + value[i] + ';';
-                };
-            };
-            el.setAttribute('style', styleTxt);
-        };
         var returnOption = function (opt) {
             var option = {};
             option.ltr = true;
@@ -76,7 +52,6 @@
         return {
             ready: ready,
             returnOption: returnOption,
-            style: style,
             repeat: repeat
         }
     }());
@@ -109,9 +84,20 @@
             ctr.item = Array.prototype.slice.call(ctr.wrap.children);
             ctr.itemWidth = ctr.slideWidth / option.view;
             ctr.itemLength = ctr.item.length;
-            utils.style(ctr.slide, { 'overflow': 'hidden', 'position': 'relative' });
-            utils.style(ctr.wrap, { 'display': 'flex', 'width': ctr.slideWidth + 'px', 'transition-property': 'transform', 'will-change': 'transform' });
-            utils.repeat(ctr.item, utils.style, { 'z-index': option.zIndex ? 1 : undefined, 'flex-shrink': '0', 'width': 1/option.view * 100 + '%' });
+            // utils.style(ctr.slide, { 'overflow': 'hidden', 'position': 'relative' });
+            // utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth + 'px', 'transition-property': 'transform', 'will-change': 'transform' });
+            // utils.repeat(ctr.item, utils.style, { 'z-index': option.zIndex ? 1 : undefined, 'flex-shrink': '0', 'width': 1/option.view * 100 + '%' });
+            ctr.slide.style.overFlow = 'hidden';
+            ctr.slide.style.position = 'relative';
+            ctr.wrap.style.display = 'flex';
+            ctr.wrap.style.width = ctr.slideWidth + 'px';
+            ctr.wrap.style.transitionProperty = 'transform';
+            ctr.wrap.style.willChange = 'transform';
+            for(var i = 0; i < ctr.itemLength; i++) {
+                ctr.item[i].style.zIndex = option.zIndex ? 1 : undefined;
+                ctr.item[i].style.flexShrink = 0;
+                ctr.item[i].style.width = 1/option.view * 100 + '%';
+            }
             if (option.loop) {
                 ctr.cloneLength = option.view;
                 ctr.afterClone = [];
@@ -175,26 +161,27 @@
                     _currentIdx = _currentIdx;
                     _cloneCurrentIdx = idx;
                 };
-                
-                act();
+            
                 if (option.indicator) {
                     ctr.indicators[idx / option.direct].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx / option.direct].classList.add(option.currentClassName);
                 };
-                ctr.item[idx].style.zIndex = 1;
-                ctr.item[_currentIdx].style.zIndex = 2;
+                if (option.zIndex) {
+                    ctr.item[idx].style.zIndex = 1;
+                    ctr.item[_currentIdx].style.zIndex = 2;
+                };
                 ctr.item[idx].classList.remove(option.currentClassName);
                 ctr.item[_currentIdx].classList.add(option.currentClassName);
                 if (option.fixed !== false) {
-                    ctr.slide.classList.remove(option.fixedClassName);
-                    for (var i in option.fixed) {
-                        if (_currentIdx === option.fixed[i]) {
-                            ctr.slide.classList.add(option.fixedClassName);
-                        }
+                    if (option.fixed.indexOf(_currentIdx) !== -1) {
+                        ctr.slide.classList.add(option.fixedClassName);
+                    } else {
+                        ctr.slide.classList.remove(option.fixedClassName);
                     };
                 };
-                idx = _currentIdx;
+                act();
                 ing();
+                idx = _currentIdx;
                 return 'work done';
             } else {
                 return 'work false';
