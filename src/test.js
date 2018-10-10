@@ -31,6 +31,45 @@
             };
             (callback)&&(_fn());
         };
+        var ease = function(n) {
+            n *= 2;
+            if (n < 1) return 0.5 * n * n;
+            return - 0.5 * (--n * (n - 2) - 1);
+        };
+        var position = function(el, time, de, st, fixed) {
+            var stop = false;
+            var startx = st;
+            var destx = de;
+            var duration = time;
+            var start = null;
+            var end = null;
+            function startAnim(timeStamp) {
+                start = timeStamp;
+                end = start + duration;
+                draw(timeStamp);
+            };
+
+            function draw(now) {
+                if (stop) return;
+                if (now - start >= duration) stop = true;
+                var p = (now - start) / duration;
+                val = utils.ease(p);
+                var x = Math.round(startx + (destx - startx) * val);
+                if(fixed) {
+                    utils.style(el, {'transform': 'none'});
+                    // build error ``
+                    // utils.style(el, {'marginLeft': `${x}px`});
+                    utils.style(el, {'marginLeft': x + 'px'});
+                } else {
+                    utils.style(el, {'marginLeft': 'auto'});
+                    // build error ``
+                    // utils.style(el, {'transform': `translateX(${x}px)`});
+                    utils.style(el, {'transform': 'translateX(' + x + 'px)'});
+                }
+                requestAnimationFrame(draw);
+            };
+            requestAnimationFrame(startAnim);
+        };
         var returnOption = function (opt) {
             var option = {};
             option.ltr = true;
@@ -70,6 +109,8 @@
         return {
             ready: ready,
             style: style,
+            ease: ease,
+            position: position,
             returnOption: returnOption,
             repeat: repeat
         }
@@ -103,27 +144,13 @@
             ctr.item = Array.prototype.slice.call(ctr.wrap.children);
             ctr.itemWidth = ctr.slideWidth / option.view;
             ctr.itemLength = ctr.item.length;
-            // ctr.slide.style.overFlow = 'hidden';
-            // ctr.slide.style.position = 'relative';
-            utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'}, function(){
-                utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth + 'px', 'transitionProperty': 'transform', 'willChange': 'transform'});
-            });
-            // ctr.wrap.style.display = 'flex';
-            // ctr.wrap.style.width = ctr.slideWidth + 'px';
-            // ctr.wrap.style.transitionProperty = 'transform';
-            // ctr.wrap.style.willChange = 'transform';
-            // utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth + 'px', 'transitionProperty': 'transform', 'willChange': 'transform'});
+            utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'});
+            utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth + 'px'});
             utils.repeat(ctr.itemLength, 
                 function(i) {
                     utils.style(ctr.item[i], {'zIndex': option.zIndex ? 1 : undefined, 'flexShrink': 0, 'width': 1/option.view * 100 + '%'})
                 }
             );
-            // for(var i = 0; i < ctr.itemLength; i++) {
-            //     utils.style(ctr.item[i], {'zIndex': option.zIndex ? 1 : undefined, 'flexShrink': 0, 'width': 1/option.view * 100 + '%'});
-            //     // ctr.item[i].style.zIndex = option.zIndex ? 1 : undefined;
-            //     // ctr.item[i].style.flexShrink = 0;
-            //     // ctr.item[i].style.width = 1/option.view * 100 + '%';
-            // };
             if (option.loop) {
                 ctr.cloneLength = option.view;
                 ctr.afterClone = [];
@@ -140,90 +167,14 @@
                         ctr.beforeClone.push(_b);
                     }
                 );
-                // for (var i = 0; i < ctr.cloneLength; i++) {
-                //     var _a = ctr.item[i].cloneNode(true);
-                //     var _b = ctr.item[ctr.itemLength - 1 - i].cloneNode(true);
-                //     _a.classList.add('clone');
-                //     _b.classList.add('clone');
-                //     ctr.wrap.append(_a);
-                //     ctr.wrap.prepend(_b);
-                //     ctr.afterClone.push(_a);
-                //     ctr.beforeClone.push(_b);
-                // };
             };
         }());
 
         var move = function (i, x) {
-            // function act() {
-            //     function _act(idx, time, x) {
-            //         var exx = x === undefined ? 0 : x;
-            //         var _width = Number(-ctr.itemWidth * (idx + _infiniteNum) + exx);
-            //         ctr.wrap.style.transitionDuration = time + 's';
-            //         if (option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
-            //             ctr.wrap.style.transitionProperty = 'margin-left';
-            //             ctr.wrap.style.willChange = 'margin-left';
-            //             ctr.wrap.style.transform = 'none';
-            //             ctr.wrap.style.marginLeft = _width + 'px';
-            //         } else {
-            //             ctr.wrap.style.transitionProperty = 'transform';
-            //             ctr.wrap.style.willChange = 'transform';
-            //             ctr.wrap.style.marginLeft = 'auto';
-            //             ctr.wrap.style.transform = 'translateX(' + _width + 'px)';
-            //         };
-            //     };
-            //     (option.loop && _cloneCurrentIdx !== _currentIdx) && (_act(_cloneCurrentIdx, 0, x));
-            //     clearTimeout(ctr.aniSto);
-            //     ctr.aniSto = setTimeout(function() {
-            //         _act(_currentIdx, option.animationTime / 1000);
-            //     }, 20);
-            // };
-            function act() {
-                function _act(idx, time, x) {
-                    var exx = x === undefined ? 0 : x;
-                    var _width = Math.round(Number(-ctr.itemWidth * (idx + _infiniteNum) + exx));
-                    ctr.wrap.style.transitionDuration = time + 's';
-                    if (option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
-                        utils.style(ctr.wrap, {'transitionProperty': 'margin-left', 'willChange': 'margin-left', 'transform': 'none', 'marginLeft': _width + 'px'});
-                    } else {
-                        utils.style(ctr.wrap, {'transitionProperty': 'transform', 'willChange': 'transform', 'marginLeft': 'auto', 'transform': 'translateX(' + _width + 'px)'});
-                    };
-                };
-                function _act1(idx, time, x) {
-                    var exx = x === undefined ? 0 : x;
-                    var _width = Math.round(Number(-ctr.itemWidth * (idx + _infiniteNum) + exx));
-                    // ctr.wrap.style.transitionDuration = time + 's';
-                    console.log('aaa');
-                    if (option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
-                        utils.style(ctr.wrap, {'transitionDuration': '0s', 'transitionProperty': 'margin-left', 'willChange': 'margin-left', 'transform': 'none', 'marginLeft': _width + 'px'}, function() {_act2(_currentIdx, option.animationTime / 1000)});
-                    } else {
-                        utils.style(ctr.wrap, {'transitionDuration': '0s', 'transitionProperty': 'transform', 'willChange': 'transform', 'marginLeft': 'auto', 'transform': 'translateX(' + _width + 'px)'}, function() {_act2(_currentIdx, option.animationTime / 1000)});
-                    };
-                };
-                function _act2(idx, time, x) {
-                    var exx = x === undefined ? 0 : x;
-                    var _width = Math.round(Number(-ctr.itemWidth * (idx + _infiniteNum) + exx));
-                    ctr.wrap.style.transitionDuration = time + 's';
-                    console.log('bbb');
-                    if (option.fixed !== false && option.fixed.indexOf(_currentIdx) !== -1) {
-                        utils.style(ctr.wrap, {'transitionProperty': 'margin-left', 'willChange': 'margin-left', 'transform': 'none', 'marginLeft': _width + 'px'});
-                    } else {
-                        utils.style(ctr.wrap, {'transitionProperty': 'transform', 'willChange': 'transform', 'marginLeft': 'auto', 'transform': 'translateX(' + _width + 'px)'});
-                    };
-                };
-                // if (option.fixed && (option.fixed.indexOf(_currentIdx) !== -1 || option.fixed.indexOf(idx) !== -1)){
-                //     _act1(_cloneCurrentIdx, 0, x);
-                // } else {
-                //     _act2(_currentIdx, option.animationTime / 1000);
-                // };
-                (option.fixed !== false && (option.fixed.indexOf(_currentIdx) !== -1 || option.fixed.indexOf(idx) !== -1) || _currentIdx !== _cloneCurrentIdx) && (console.log('ddd'), _act(_cloneCurrentIdx, 0, x));
-                clearTimeout(ctr.aniSto);
-                ctr.aniSto = setTimeout(function() {
-                    _act(_currentIdx, option.animationTime / 1000);
-                }, 20);
-            };
             if (option.double || !ctr.ing) {
                 var _currentIdx;
                 var _cloneCurrentIdx;
+                var _fixed;
                 var _infiniteNum = ctr.cloneLength === undefined ? 0 : ctr.cloneLength;
                 _infiniteNum = option.center ? _infiniteNum - Math.floor(_infiniteNum / 2) : _infiniteNum;
                 if(i === false) {
@@ -243,28 +194,30 @@
                     _currentIdx = _currentIdx;
                     _cloneCurrentIdx = idx;
                 };
-                // (!option.loop) && (_cloneCurrentIdx = _currentIdx);
+                (!option.loop) && (_cloneCurrentIdx = idx);
                 if (option.indicator) {
                     ctr.indicators[idx / option.direct].classList.remove(option.currentClassName);
                     ctr.indicators[_currentIdx / option.direct].classList.add(option.currentClassName);
                 };
                 if (option.zIndex) {
-                    utils.style(ctr.item[idx], {'zIndex': '1'}, function(){
-                        utils.style(ctr.item[_currentIdx], {'zIndex': '2'});
-                    });
-                    // ctr.item[idx].style.zIndex = 1;
-                    // ctr.item[_currentIdx].style.zIndex = 2;
+                    utils.style(ctr.item[idx], {'zIndex': '1'});
+                    utils.style(ctr.item[_currentIdx], {'zIndex': '2'});
                 };
                 ctr.item[idx].classList.remove(option.currentClassName);
                 ctr.item[_currentIdx].classList.add(option.currentClassName);
                 if (option.fixed !== false) {
                     if (option.fixed.indexOf(_currentIdx) !== -1) {
+                        _fixed = true;
                         ctr.slide.classList.add(option.fixedClassName);
                     } else {
+                        _fixed = false;
                         ctr.slide.classList.remove(option.fixedClassName);
                     };
                 };
-                act();
+                var touchX = x === undefined ? 0 : x;
+                var de = Math.round(Number(-ctr.itemWidth * (_currentIdx + _infiniteNum)));
+                var st = Math.round(Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + touchX));
+                utils.position(ctr.wrap, option.animationTime, de, st, _fixed);
                 ing();
                 idx = _currentIdx;
                 return 'work done';
