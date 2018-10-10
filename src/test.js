@@ -11,7 +11,7 @@
         var repeat = function (length, method) {
             for (var i = 0; i < length; i++) {
                 method(i);
-            };
+            }; 
         };
         var style = function(el, style, callback) {
             for(var i in style) {
