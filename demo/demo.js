@@ -18,7 +18,7 @@ var c = new uiSlide('.width3loopfixed', {
 });
 var d = new uiSlide('.width3loopfixed3', {
     view: 3,
-    slideNumber: 2,
+    slideNumber: 4,
     loop: true,
     autoTime: 7000,
     animationTime: 1000,

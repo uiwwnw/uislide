@@ -11,7 +11,7 @@
         var repeat = function (length, method) {
             for (var i = 0; i < length; i++) {
                 method(i);
-            }; 
+            };
         };
         var style = function(el, style, callback) {
             for(var i in style) {
@@ -36,13 +36,22 @@
             if (n < 1) return 0.5 * n * n;
             return - 0.5 * (--n * (n - 2) - 1);
         };
-        var position = function(el, time, de, st, fixed) {
+        var position = function(el, time, de, st, fixed, bool) {
             var stop = false;
             var startx = st;
             var destx = de;
             var duration = time;
             var start = null;
             var end = null;
+            // if(bool) {
+            //     if(fixed) {
+            //         destx = -el.style.marginLeft.replace(/[^0-9]/g, '');
+            //     } else {
+            //         destx = -el.style.transform.replace(/[^0-9]/g, '');
+            //     };
+            // } else {
+            //     destx = de;
+            // };
             function startAnim(timeStamp) {
                 start = timeStamp;
                 end = start + duration;
@@ -144,6 +153,7 @@
             ctr.item = Array.prototype.slice.call(ctr.wrap.children);
             ctr.itemWidth = ctr.slideWidth / option.view;
             ctr.itemLength = ctr.item.length;
+            ctr.indLast = ctr.itemLength%option.direct === 0;
             utils.style(ctr.slide, {'overflow': 'hidden', 'position': 'relative'});
             utils.style(ctr.wrap, {'display': 'flex', 'width': ctr.slideWidth + 'px'});
             utils.repeat(ctr.itemLength, 
@@ -185,19 +195,29 @@
                     _currentIdx = i;
                 };
                 if (_currentIdx < 0) {
-                    _currentIdx = ctr.itemLength - 1;
-                    _cloneCurrentIdx = ctr.itemLength;
+                    if(!ctr.indLast&&idx !== 0){
+                        _currentIdx = 0;
+                        _cloneCurrentIdx = idx;
+                    } else {
+                        _currentIdx = ctr.itemLength - 1;
+                        _cloneCurrentIdx = ctr.itemLength;
+                    };
                 } else if(_currentIdx > ctr.itemLength - 1) {
-                    _currentIdx = 0;
-                    _cloneCurrentIdx = - 1;
+                    if(!ctr.indLast&&idx !== ctr.itemLength - 1){
+                        _currentIdx = ctr.itemLength - 1;
+                        _cloneCurrentIdx = idx;
+                    } else {
+                        _currentIdx = 0;
+                        _cloneCurrentIdx = - 1;
+                    };
                 } else {
                     _currentIdx = _currentIdx;
                     _cloneCurrentIdx = idx;
                 };
                 (!option.loop) && (_cloneCurrentIdx = idx);
                 if (option.indicator) {
-                    ctr.indicators[idx / option.direct].classList.remove(option.currentClassName);
-                    ctr.indicators[_currentIdx / option.direct].classList.add(option.currentClassName);
+                    ctr.indicators[Math.ceil(idx / option.direct)].classList.remove(option.currentClassName);
+                    ctr.indicators[Math.ceil(_currentIdx / option.direct)].classList.add(option.currentClassName);
                 };
                 if (option.zIndex) {
                     utils.style(ctr.item[idx], {'zIndex': '1'});
@@ -217,7 +237,7 @@
                 var touchX = x === undefined ? 0 : x;
                 var de = Math.round(Number(-ctr.itemWidth * (_currentIdx + _infiniteNum)));
                 var st = Math.round(Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + touchX));
-                utils.position(ctr.wrap, option.animationTime, de, st, _fixed);
+                utils.position(ctr.wrap, option.animationTime, de, st, _fixed, option.double && ctr.ing);
                 ing();
                 idx = _currentIdx;
                 return 'work done';
@@ -269,13 +289,17 @@
                 ctr.indicators = ctr.indicator.childNodes;
                 ctr.slide.append(ctr.indicator);
                 ctr.indicator.classList.add(option.indicatorClassName);
-                for (var i = 0; i < ctr.itemLength / option.direct; i++) {
+                for (var i = 0; i < (ctr.indLast?ctr.itemLength / option.direct:ctr.itemLength / option.direct+1); i++) {
                     var _idc = document.createElement('i');
                     ctr.indicator.append(_idc);
                     _idc.setAttribute('data-index', i);
                     _idc.onclick = function () {
                         autoStop();
-                        move(Number(this.getAttribute('data-index') * option.direct));
+                        if(!ctr.indLast && i === Math.floor(ctr.itemLength / option.direct + 1)) {
+                            move(ctr.itemLength - 1);
+                        } else {
+                            move(Number(this.getAttribute('data-index') * option.direct));
+                        }
                         clearTimeout(ctr.btnSto);
                         ctr.btnSto = setTimeout(function () {
                             autoStart();
