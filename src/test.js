@@ -44,13 +44,9 @@
             var start = null;
             var end = null;
             // if(bool) {
-            //     if(fixed) {
-            //         destx = -el.style.marginLeft.replace(/[^0-9]/g, '');
-            //     } else {
-            //         destx = -el.style.transform.replace(/[^0-9]/g, '');
-            //     };
+            //         startx = el.style.transform === 'none'?-el.style.marginLeft.replace(/[^0-9]/g, ''):-el.style.transform.replace(/[^0-9]/g, '');
             // } else {
-            //     destx = de;
+            //     startx = st;
             // };
             function startAnim(timeStamp) {
                 start = timeStamp;
@@ -237,7 +233,7 @@
                 var touchX = x === undefined ? 0 : x;
                 var de = Math.round(Number(-ctr.itemWidth * (_currentIdx + _infiniteNum)));
                 var st = Math.round(Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + touchX));
-                utils.position(ctr.wrap, option.animationTime, de, st, _fixed, option.double && ctr.ing);
+                new utils.position(ctr.wrap, option.animationTime, de, st, _fixed, option.double && ctr.ing);
                 ing();
                 idx = _currentIdx;
                 return 'work done';
@@ -246,6 +242,7 @@
             };
         };
         var touch = function () {
+            var bool;
             var start;
             var margin;
             var transformX;
@@ -253,6 +250,7 @@
             var movex;
             var movey;
             ctr.slide.ontouchstart = function (e) {
+                bool = true;
                 movex = 0;
                 movey = e.touches[0].screenY;
                 start = -e.touches[0].screenX;
@@ -261,7 +259,7 @@
                 margin = Number(ctr.wrap.style.marginLeft.replace('px', ''));
             };
             ctr.slide.ontouchmove = function (e) {
-                if (option.double || !ctr.ing) {
+                if (bool && option.double || !ctr.ing) {
                     movex = start + e.touches[0].screenX;
                     ctr.wrap.style.transitionDuration = '0s';
                     (ctr.wrap.style.transform !== 'none') && (ctr.wrap.style.transform = 'translateX(' + Number(transformX + movex) + 'px)');
@@ -270,6 +268,7 @@
                 }
             };
             ctr.slide.ontouchend = function () {
+                bool = false;
                 if (movex < -option.touchSafeWidth) {
                     direct = true;
                 } else if (movex > option.touchSafeWidth) {
@@ -289,7 +288,24 @@
                 ctr.indicators = ctr.indicator.childNodes;
                 ctr.slide.append(ctr.indicator);
                 ctr.indicator.classList.add(option.indicatorClassName);
-                for (var i = 0; i < (ctr.indLast?ctr.itemLength / option.direct:ctr.itemLength / option.direct+1); i++) {
+                // for (var i = 0; i < (ctr.indLast?ctr.itemLength / option.direct:ctr.itemLength / option.direct+1); i++) {
+                //     var _idc = document.createElement('i');
+                //     ctr.indicator.append(_idc);
+                //     _idc.setAttribute('data-index', i);
+                //     _idc.onclick = function () {
+                //         autoStop();
+                //         if(!ctr.indLast && i === Math.floor(ctr.itemLength / option.direct + 1)) {
+                //             move(ctr.itemLength - 1);
+                //         } else {
+                //             move(Number(this.getAttribute('data-index') * option.direct));
+                //         }
+                //         clearTimeout(ctr.btnSto);
+                //         ctr.btnSto = setTimeout(function () {
+                //             autoStart();
+                //         }, option.autoTime);
+                //     };
+                // }
+                utils.repeat((ctr.indLast?ctr.itemLength / option.direct:ctr.itemLength / option.direct+1), function(i) {
                     var _idc = document.createElement('i');
                     ctr.indicator.append(_idc);
                     _idc.setAttribute('data-index', i);
@@ -305,7 +321,7 @@
                             autoStart();
                         }, option.autoTime);
                     };
-                }
+                });
             }
         }();
         var button = function () {
