@@ -12,7 +12,7 @@
     "url": "git+https://github.com/uiwwnw/uislide.git"
   },
   "keywords": [
-    "slide"
+    "slide", "uislide", "ui slide", "fixed slide"
   ],
   "author": "uiwwnw (uiwwnw@icloud.com)",
   "license": "MIT",
