@@ -1,5 +1,5 @@
 ; (function () {
-    var root = this;
+    var root = window;
     var utils = (function () {
         var ready = function (fn) {
             if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
@@ -44,7 +44,7 @@
             var start = null;
             var end = null;
             // if(bool) {
-            //         startx = el.style.transform === 'none'?-el.style.marginLeft.replace(/[^0-9]/g, ''):-el.style.transform.replace(/[^0-9]/g, '');
+            //         startx = el.style.transform === 'none'?-Number(el.style.marginLeft.replace(/[^0-9]/g, '')):-Number(el.style.transform.replace(/[^0-9]/g, ''));
             // } else {
             //     startx = st;
             // };
@@ -59,17 +59,22 @@
                 if (now - start >= duration) stop = true;
                 var p = (now - start) / duration;
                 val = utils.ease(p);
-                var x = Math.round(startx + (destx - startx) * val);
+                var x = !stop?(startx + (destx - startx) * val).toFixed(1):destx;
+
                 if(fixed) {
                     utils.style(el, {'transform': 'none'});
+                    // el.style.transform = 'none';
                     // build error ``
                     // utils.style(el, {'marginLeft': `${x}px`});
                     utils.style(el, {'marginLeft': x + 'px'});
+                    // el.style.marginLeft = x + 'px'
                 } else {
                     utils.style(el, {'marginLeft': 'auto'});
+                    // el.style.marginLeft = 'auto';
                     // build error ``
                     // utils.style(el, {'transform': `translateX(${x}px)`});
                     utils.style(el, {'transform': 'translateX(' + x + 'px)'});
+                    // el.style.transform = 'translateX(' + x + 'px)';
                 }
                 requestAnimationFrame(draw);
             };
@@ -231,9 +236,9 @@
                     };
                 };
                 var touchX = x === undefined ? 0 : x;
-                var de = Math.round(Number(-ctr.itemWidth * (_currentIdx + _infiniteNum)));
-                var st = Math.round(Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + touchX));
-                new utils.position(ctr.wrap, option.animationTime, de, st, _fixed, option.double && ctr.ing);
+                var de = Number(-ctr.itemWidth * (_currentIdx + _infiniteNum));
+                var st = Number(-ctr.itemWidth * (_cloneCurrentIdx + _infiniteNum) + touchX);
+                utils.position(ctr.wrap, option.animationTime, de, st, _fixed, option.double && ctr.ing);
                 ing();
                 idx = _currentIdx;
                 return 'work done';
@@ -262,8 +267,8 @@
                 if (bool && option.double || !ctr.ing) {
                     movex = start + e.touches[0].screenX;
                     ctr.wrap.style.transitionDuration = '0s';
-                    (ctr.wrap.style.transform !== 'none') && (ctr.wrap.style.transform = 'translateX(' + Number(transformX + movex) + 'px)');
-                    (ctr.wrap.style.marginLeft !== 'auto') && (ctr.wrap.style.marginLeft = Number(margin + movex) + 'px');
+                    (ctr.wrap.style.transform !== 'none') && (ctr.wrap.style.transform = 'translateX(' + (Number(transformX + movex)).toFixed(1) + 'px)');
+                    (ctr.wrap.style.marginLeft !== 'auto') && (ctr.wrap.style.marginLeft = (Number(margin + movex)).toFixed(1) + 'px');
                     (Math.abs(movex) > option.touchSafeWidth) && (autoStop());
                     bool = 'ing';
                 }
