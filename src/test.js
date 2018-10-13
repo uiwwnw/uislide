@@ -265,21 +265,24 @@
                     (ctr.wrap.style.transform !== 'none') && (ctr.wrap.style.transform = 'translateX(' + Number(transformX + movex) + 'px)');
                     (ctr.wrap.style.marginLeft !== 'auto') && (ctr.wrap.style.marginLeft = Number(margin + movex) + 'px');
                     (Math.abs(movex) > option.touchSafeWidth) && (autoStop());
+                    bool = 'ing';
                 }
             };
             ctr.slide.ontouchend = function () {
-                bool = false;
-                if (movex < -option.touchSafeWidth) {
-                    direct = true;
-                } else if (movex > option.touchSafeWidth) {
-                    direct = false;
-                } else if (movex === 0) {
-                    direct = undefined;   
-                } else {
-                    direct = idx;
-                };
-                (!option.autoIng) && (autoStart());
-                (direct !== undefined) && (move(direct, movex));
+                if (bool === 'ing') {
+                    if (movex < -option.touchSafeWidth) {
+                        direct = true;
+                    } else if (movex > option.touchSafeWidth) {
+                        direct = false;
+                    } else if (movex === 0) {
+                        direct = undefined;   
+                    } else {
+                        direct = idx;
+                    };
+                    (!option.autoIng) && (autoStart());
+                    (direct !== undefined) && (move(direct, movex));
+                    bool = false;
+                }
             };
         };
         var indicator = function () {

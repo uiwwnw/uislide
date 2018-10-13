@@ -9,13 +9,15 @@ html(lang='ko')
 
   body
     h1 uiSlide demo page
+    h2 
+        a(href='https://github.com/uiwwnw/uislide') github
     h2 normal & loop & fixed & indicator
     .slideNormal.loopfixed
         ul
             -for(var i = 0; i < 10; i++)
                 li
-                    //- img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
-                    img(src='data/img/sampleimg' + [i+1] + '.jpg')
+                    img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
+                    //- img(src='data/img/sampleimg' + [i+1] + '.jpg')
                     -if(i === 1 || i === 2 || i === 4 || i === 5) 
                      span= 'fixed info' + [i+1]
                     -else
@@ -26,8 +28,8 @@ html(lang='ko')
         ul
             -for(var i = 0; i < 10; i++)
                 li
-                    //- img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
-                    img(src='data/img/sampleimg' + [i+1] + '.jpg')
+                    img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
+                    //- img(src='data/img/sampleimg' + [i+1] + '.jpg')
                     span= 'unfixed info' + [i+1] 
 
     h2 width: 1/3 && loop & fixed
@@ -35,8 +37,8 @@ html(lang='ko')
         ul
             -for(var i = 0; i < 10; i++)
                 li
-                    //- img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
-                    img(src='data/img/sampleimg' + [i+1] + '.jpg')
+                    img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
+                    //- img(src='data/img/sampleimg' + [i+1] + '.jpg')
                     -if(i === 5 || i === 8) 
                      span= 'fixed info' + [i+1]
                     -else
@@ -46,8 +48,8 @@ html(lang='ko')
         ul
             -for(var i = 0; i < 10; i++)
                 li
-                    //- img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
-                    img(src='data/img/sampleimg' + [i+1] + '.jpg')
+                    img(src='https://raw.githubusercontent.com/uiwwnw/uislide/master/data/img/sampleimg' + [i+1] + '.jpg')
+                    //- img(src='data/img/sampleimg' + [i+1] + '.jpg')
                     -if(i === 5 || i === 8) 
                      span= 'fixed info' + [i+1]
                     -else
