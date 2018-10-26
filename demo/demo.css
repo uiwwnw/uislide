@@ -2,6 +2,11 @@ html {
     font-size: 62.5%;
 }
 
+.wrap {
+    width: 600px;
+    margin: auto;
+}
+
 img {
     display: block;
     width: 100%;
